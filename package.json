@@ -7,7 +7,10 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "prettier:check": "prettier --check .",
+    "eslint:check": "eslint . --ext .ts,.tsx",
+    "ts:check": "tsc --noEmit"
   },
   "dependencies": {
     "react": "^19.0.0",
