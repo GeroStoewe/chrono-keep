@@ -1,0 +1,13 @@
+@import "tailwindcss";
+
+body {
+  font-family: "Roboto", sans-serif;
+}
+
+/** Security **/
+.focus\:gradient-border:focus {
+  border-width: 2px;
+  border-image: linear-gradient(to right, #3b82f6, #9333ea) 1;
+  border-radius: 0.5rem;
+  outline: none;
+}
