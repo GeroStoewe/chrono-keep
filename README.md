@@ -39,15 +39,15 @@ export default tseslint.config({
     // Alternatively, use this for stricter rules
     ...tseslint.configs.strictTypeChecked,
     // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
+    ...tseslint.configs.stylisticTypeChecked
   ],
   languageOptions: {
     // other options...
     parserOptions: {
       project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
+      tsconfigRootDir: import.meta.dirname
+    }
+  }
 });
 ```
 
@@ -62,13 +62,13 @@ export default tseslint.config({
   plugins: {
     // Add the react-x and react-dom plugins
     "react-x": reactX,
-    "react-dom": reactDom,
+    "react-dom": reactDom
   },
   rules: {
     // other rules...
     // Enable its recommended typescript rules
     ...reactX.configs["recommended-typescript"].rules,
-    ...reactDom.configs.recommended.rules,
-  },
+    ...reactDom.configs.recommended.rules
+  }
 });
 ```
