@@ -5,16 +5,19 @@ import {
   createUserWithEmailAndPassword,
   updateProfile,
   onAuthStateChanged,
+  sendPasswordResetEmail,
   signOut,
   signInWithPopup
 } from "firebase/auth";
 import { auth, googleProvider } from "../firebase";
 import { AuthContext } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 /**
  * The AuthProvider provides authentication logic for the entire application.
- * This provider manages the user state, sign-up, login, and logout actions.
+ * This provider manages the user state, sign-up, login, forgot password and logout actions.
  * Any components that need authentication information should be wrapped in this context.
  *
  * @param children - The child components that consume the AuthContext.
@@ -47,10 +50,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setError(null);
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      navigate("/home");
+      toast.success("Login successful!");
+      navigate("/dashboard");
     } catch (error) {
       console.error("Login failed", error);
-      setError("Login failed. Please check your credentials and try again.");
+      toast.error("Login failed. Please check your credentials and try again.");
     }
   };
 
@@ -79,10 +83,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       const fullName = `${firstName} ${lastName}`;
       await updateProfile(userCredentials.user, { displayName: fullName });
       await signInWithEmailAndPassword(auth, email, password);
-      navigate("/home");
+      toast.success("Registration successful!");
+      navigate("/dashboard");
     } catch (error) {
       console.error("SignUp failed", error);
-      setError("Registration failed. Please try again.");
+      toast.error("Registration failed. Please try again.");
     }
   };
 
@@ -93,10 +98,32 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const googleLogin = async () => {
     try {
       await signInWithPopup(auth, googleProvider);
-      navigate("/home");
+      toast.success("Google login successful!");
+      navigate("/dashboard");
     } catch (error) {
       console.error("Google login failed", error);
-      setError("Google login failed. Please try again.");
+      toast.error("Google login failed. Please try again.");
+    }
+  };
+
+  /**
+   * Sends a password reset email to the provided email address.
+   *
+   * This function uses Firebase Authentication to send a password reset email.
+   * After the email is successfully sent, the user is redirected to the login page.
+   * If an error occurs, an error message is set.
+   *
+   * @param {string} email - The email address of the user who requested the password reset.
+   * @returns {Promise<void>} A promise that resolves once the password reset email is sent, or rejects with an error.
+   */
+  const resetPassword = async (email: string) => {
+    try {
+      await sendPasswordResetEmail(auth, email);
+      toast.success("Password reset email sent. Please check your inbox.");
+      navigate("/login");
+    } catch (error) {
+      console.error("Error resetting password", error);
+      toast.error("Failed to send reset email. Please try again.");
     }
   };
 
@@ -107,14 +134,35 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
    */
   const logout = async () => {
     await signOut(auth);
+    toast.success("You have been logged out!");
   };
 
   // Provide the AuthContext so that child components can access authentication data
   return (
-    <AuthContext.Provider
-      value={{ user, login, signup, googleLogin, logout, error }}
-    >
-      {children}
-    </AuthContext.Provider>
+    <>
+      <AuthContext.Provider
+        value={{
+          user,
+          login,
+          signup,
+          googleLogin,
+          resetPassword,
+          logout,
+          error
+        }}
+      >
+        {children}
+      </AuthContext.Provider>
+
+      <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar={true}
+        closeOnClick={true}
+        pauseOnFocusLoss={false}
+        draggable={false}
+        className="select-none"
+      />
+    </>
   );
 };

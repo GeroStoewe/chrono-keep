@@ -65,24 +65,38 @@ export default function Login() {
             onSubmit={(e) =>
               handleLogin(e, login, email, password, setIsLoading)
             }
-            className="space-y-6"
           >
-            {/* Email Input */}
-            <TextInputField
-              label="Email Address"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
+            <div className="space-y-6">
+              {/* Email Input */}
+              <TextInputField
+                label="Email Address"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
 
-            {/* Password Input */}
-            <PasswordInput
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
+              {/* Password Input */}
+              <PasswordInput
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
+
+            {/* Forgot Password Link */}
+            <p className="text-right text-gray-800 select-none mt-1">
+              Forgot your password?{" "}
+              <a
+                href="/forgot-password"
+                className="text-blue-600 font-semibold transition duration-300 ease-in-out hover:text-purple-700"
+              >
+                Reset it here
+              </a>
+            </p>
 
             {/* Submit Button */}
-            <SubmitButton isLoading={isLoading} text="LOG IN" />
+            <div className="mt-6">
+              <SubmitButton isLoading={isLoading} text="LOGIN" />
+            </div>
           </form>
 
           {/* Or Divider */}
