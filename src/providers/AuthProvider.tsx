@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import {
   User,
+  signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   updateProfile,
   onAuthStateChanged,
@@ -37,6 +38,23 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   /**
+   * Logs in a user with email and password.
+   *
+   * @param email - The user's email
+   * @param password - The user's password
+   */
+  const login = async (email: string, password: string) => {
+    setError(null);
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      navigate("/home");
+    } catch (error) {
+      console.error("Login failed", error);
+      setError("Login failed. Please check your credentials and try again.");
+    }
+  };
+
+  /**
    * Registers a new user with email and password, updates the user's profile
    * with the full name, and navigates to the login page for automatically authentication.
    *
@@ -60,7 +78,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       );
       const fullName = `${firstName} ${lastName}`;
       await updateProfile(userCredentials.user, { displayName: fullName });
-      navigate("/login");
+      await signInWithEmailAndPassword(auth, email, password);
+      navigate("/home");
     } catch (error) {
       console.error("SignUp failed", error);
       setError("Registration failed. Please try again.");
@@ -92,7 +111,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   // Provide the AuthContext so that child components can access authentication data
   return (
-    <AuthContext.Provider value={{ user, signup, googleLogin, logout, error }}>
+    <AuthContext.Provider
+      value={{ user, login, signup, googleLogin, logout, error }}
+    >
       {children}
     </AuthContext.Provider>
   );
