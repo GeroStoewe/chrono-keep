@@ -2,7 +2,8 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { AuthProvider } from "../providers/AuthProvider";
 import "../index.css";
 import Home from "./Home";
-import SignUp from "./security/SignUp";
+import LoginPage from "../pages/LoginPage";
+import SignUpPage from "../pages/SignUpPage";
 
 /**
  * The main application component that sets up routing and provides authentication context to the entire app.
@@ -20,7 +21,8 @@ function App() {
       <AuthProvider>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/signup" element={<SignUp />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignUpPage />} />
         </Routes>
       </AuthProvider>
     </Router>
