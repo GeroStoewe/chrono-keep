@@ -1,14 +1,7 @@
 // TODO: This is at the moment only a dummy component. It will be extended in the future.
-/*
-function DashboardPage() {
-  return <h1>DASHBOARD</h1>;
-}
-
-export default DashboardPage;
-*/
 
 import { useEffect, useState } from "react";
-import { ref, onValue, } from "firebase/database";
+import { ref, onValue } from "firebase/database";
 import { realtimeDb } from "../firebase.ts";
 
 // Define the type for a time capsule
@@ -27,23 +20,27 @@ function DashboardPage() {
 
   useEffect(() => {
     const dbRef = ref(realtimeDb, "timeCapsules");
-    onValue(dbRef, (snapshot) => {
-      const data = snapshot.val();
-      console.log("Data from Firebase:", data); // Debugging log
-      if (data) {
-        // Convert the object of capsules into an array
-        const capsulesArray: TimeCapsule[] = Object.values(data);
-        setCapsules(capsulesArray);
-      } else {
-        console.log("No data found in Firebase."); // Debugging log
-        setError("No time capsules found.");
+    onValue(
+      dbRef,
+      (snapshot) => {
+        const data = snapshot.val();
+        console.log("Data from Firebase:", data); // Debugging log
+        if (data) {
+          // Convert the object of capsules into an array
+          const capsulesArray: TimeCapsule[] = Object.values(data);
+          setCapsules(capsulesArray);
+        } else {
+          console.log("No data found in Firebase."); // Debugging log
+          setError("No time capsules found.");
+        }
+        setLoading(false);
+      },
+      (error) => {
+        console.error("Error fetching data:", error); // Debugging log
+        setError("Failed to fetch data.");
+        setLoading(false);
       }
-      setLoading(false);
-    }, (error) => {
-      console.error("Error fetching data:", error); // Debugging log
-      setError("Failed to fetch data.");
-      setLoading(false);
-    });
+    );
   }, []);
 
   if (loading) return <p>Loading...</p>;
