@@ -1,6 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
+import { getDatabase } from "firebase/database"; // added this line for database integration
 
 // The actual data is inside the ".env.local" file
 const firebaseConfig = {
@@ -10,7 +11,8 @@ const firebaseConfig = {
   storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
   messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
-  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
+  databaseURL: "https://chrono-keep-default-rtdb.europe-west1.firebasedatabase.app/" // Added our Realtime Database URL
 };
 
 const app = initializeApp(firebaseConfig);
@@ -18,4 +20,5 @@ const googleProvider = new GoogleAuthProvider();
 
 export const db = getFirestore(app);
 export const auth = getAuth(app);
+export const realtimeDb = getDatabase(app); // Exports Realtime Database instance
 export { app, googleProvider };
