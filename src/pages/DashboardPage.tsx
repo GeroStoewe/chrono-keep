@@ -1,16 +1,28 @@
-// TODO: This is at the moment only a dummy component. It will be extended in the future.
-
 import { useEffect, useState } from "react";
 import { ref, onValue } from "firebase/database";
 import { realtimeDb } from "../firebase.ts";
+import { Link } from "react-router-dom";
+import GradientHeading from "../components/GradientHeading";
+import { SubmitButton } from "../components/SubmitButton";
+
+/**
+ * Dashboard Component
+ *
+ * This component provides a user-friendly dashboard with:
+ * - Navigation bar.
+ * - Create Time Capsule button.
+ * - Display of all time capsules.
+ *
+ * @returns {JSX.Element} The dashboard UI.
+ */
 
 // Define the type for a time capsule
 interface TimeCapsule {
+  id: string; // Add ID for unique key
   title: string;
   status: string;
   unlockDate: string;
-  //description?: string; // Optional property
-  //imageUrl?: string; // Optional property
+  imageUrl?: string; // Optional property for image placeholder
 }
 
 function DashboardPage() {
@@ -27,7 +39,12 @@ function DashboardPage() {
         console.log("Data from Firebase:", data); // Debugging log
         if (data) {
           // Convert the object of capsules into an array
-          const capsulesArray: TimeCapsule[] = Object.values(data);
+          const capsulesArray: TimeCapsule[] = Object.entries(data).map(
+            ([id, capsule]) => ({
+              id,
+              ...(capsule as TimeCapsule) // Spread the capsule data
+            })
+          );
           setCapsules(capsulesArray);
         } else {
           console.log("No data found in Firebase."); // Debugging log
@@ -47,21 +64,68 @@ function DashboardPage() {
   if (error) return <p>{error}</p>;
 
   return (
-    <div className="p-6">
-      <h1 className="text-3xl font-bold mb-6">DASHBOARD</h1>
-      {capsules.length > 0 ? (
+    <div className="min-h-screen bg-gradient-to-tl from-blue-400 to-purple-700">
+      {/* Navigation Bar */}
+      <nav className="bg-white shadow-lg">
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="flex justify-between items-center py-4">
+            <GradientHeading text="CHRONO KEEP" />
+            <div className="flex space-x-8">
+              <Link
+                to="/archive"
+                className="text-gray-800 hover:text-purple-700"
+              >
+                Archive
+              </Link>
+              <Link to="/about" className="text-gray-800 hover:text-purple-700">
+                About Us
+              </Link>
+              <Link
+                to="/profile"
+                className="text-gray-800 hover:text-purple-700"
+              >
+                Profile
+              </Link>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      {/* Dashboard Content */}
+      <div className="max-w-6xl mx-auto p-8">
+        {/* Create Time Capsule Button */}
+        <div className="flex justify-end mb-8">
+          <Link to="/create-capsule">
+            <SubmitButton text="Create Time Capsule" isLoading={false} />
+          </Link>
+        </div>
+
+        {/* Time Capsules Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {capsules.map((capsule, index) => (
-            <div key={index} className="bg-white p-6 rounded-lg shadow-md">
-              <h2 className="text-xl font-semibold mb-2">{capsule.title}</h2>
-              <p className="text-gray-600 mb-2">Status: {capsule.status}</p>
-              <p className="text-gray-600">Unlock Date: {capsule.unlockDate}</p>
+          {capsules.map((capsule) => (
+            <div
+              key={capsule.id}
+              className="bg-white rounded-xl shadow-lg overflow-hidden"
+            >
+              {/* Image Placeholder */}
+              <img
+                src={capsule.imageUrl || "/placeholder-image.png"} // Use placeholder if no image
+                alt={capsule.title}
+                className="w-full h-48 object-cover"
+              />
+
+              {/* Capsule Details */}
+              <div className="p-6">
+                <h2 className="text-xl font-semibold mb-2">{capsule.title}</h2>
+                <p className="text-gray-600 mb-2">Status: {capsule.status}</p>
+                <p className="text-gray-600">
+                  Unlock Date: {capsule.unlockDate}
+                </p>
+              </div>
             </div>
           ))}
         </div>
-      ) : (
-        <p className="text-gray-600">No time capsules found.</p>
-      )}
+      </div>
     </div>
   );
 }
