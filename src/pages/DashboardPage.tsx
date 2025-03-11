@@ -42,7 +42,7 @@ function DashboardPage() {
           const capsulesArray: TimeCapsule[] = Object.entries(data).map(
             ([id, capsule]) => ({
               id,
-              ...(capsule as TimeCapsule), // Spread the capsule data
+              ...(capsule as TimeCapsule) // Spread the capsule data
             })
           );
           setCapsules(capsulesArray);
@@ -71,13 +71,19 @@ function DashboardPage() {
           <div className="flex justify-between items-center py-4">
             <GradientHeading text="CHRONO KEEP" />
             <div className="flex space-x-8">
-              <Link to="/archive" className="text-gray-800 hover:text-purple-700">
+              <Link
+                to="/archive"
+                className="text-gray-800 hover:text-purple-700"
+              >
                 Archive
               </Link>
               <Link to="/about" className="text-gray-800 hover:text-purple-700">
                 About Us
               </Link>
-              <Link to="/profile" className="text-gray-800 hover:text-purple-700">
+              <Link
+                to="/profile"
+                className="text-gray-800 hover:text-purple-700"
+              >
                 Profile
               </Link>
             </div>
@@ -112,7 +118,9 @@ function DashboardPage() {
               <div className="p-6">
                 <h2 className="text-xl font-semibold mb-2">{capsule.title}</h2>
                 <p className="text-gray-600 mb-2">Status: {capsule.status}</p>
-                <p className="text-gray-600">Unlock Date: {capsule.unlockDate}</p>
+                <p className="text-gray-600">
+                  Unlock Date: {capsule.unlockDate}
+                </p>
               </div>
             </div>
           ))}
