@@ -2,6 +2,7 @@ import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
 import { getDatabase } from "firebase/database"; // added this line for database integration
+import { getStorage } from "firebase/storage"; // added this line for getStorage
 
 // The actual data is inside the ".env.local" file
 const firebaseConfig = {
@@ -22,4 +23,5 @@ const googleProvider = new GoogleAuthProvider();
 export const db = getFirestore(app);
 export const auth = getAuth(app);
 export const realtimeDb = getDatabase(app); // Exports Realtime Database instance
+export const storage = getStorage(app); // Exports Storage instance
 export { app, googleProvider };
