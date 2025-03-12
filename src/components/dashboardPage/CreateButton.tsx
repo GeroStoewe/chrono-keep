@@ -1,7 +1,15 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
-export function CreateButton({ text, to, isLoading = false }: { text: string; to: string; isLoading?: boolean }) {
+export function CreateButton({
+  text,
+  to,
+  isLoading = false
+}: {
+  text: string;
+  to: string;
+  isLoading?: boolean;
+}) {
   const [isExpanded, setIsExpanded] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const navigate = useNavigate(); // Hook for programmatic navigation
@@ -9,7 +17,10 @@ export function CreateButton({ text, to, isLoading = false }: { text: string; to
   // Collapse the button when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (buttonRef.current && !buttonRef.current.contains(event.target as Node)) {
+      if (
+        buttonRef.current &&
+        !buttonRef.current.contains(event.target as Node)
+      ) {
         setIsExpanded(false);
       }
     };
@@ -44,7 +55,12 @@ export function CreateButton({ text, to, isLoading = false }: { text: string; to
         viewBox="0 0 24 24"
         xmlns="http://www.w3.org/2000/svg"
       >
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4"></path>
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="2"
+          d="M12 4v16m8-8H4"
+        ></path>
       </svg>
 
       {/* Button Text (visible only when expanded) */}
@@ -58,7 +74,14 @@ export function CreateButton({ text, to, isLoading = false }: { text: string; to
           fill="none"
           viewBox="0 0 24 24"
         >
-          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+          <circle
+            className="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            strokeWidth="4"
+          ></circle>
           <path
             className="opacity-75"
             fill="currentColor"

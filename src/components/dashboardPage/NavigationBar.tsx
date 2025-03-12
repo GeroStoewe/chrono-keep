@@ -8,7 +8,10 @@ function NavBar() {
         <div className="flex justify-between items-center py-4">
           <GradientHeading text="CHRONO KEEP" />
           <div className="flex space-x-8">
-            <Link to="/dashboard" className="text-gray-800 hover:text-purple-700">
+            <Link
+              to="/dashboard"
+              className="text-gray-800 hover:text-purple-700"
+            >
               Dashboard
             </Link>
             <Link to="/archive" className="text-gray-800 hover:text-purple-700">

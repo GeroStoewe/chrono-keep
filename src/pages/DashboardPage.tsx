@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { ref, onValue } from "firebase/database";
 import { realtimeDb } from "../firebase.ts";
-import { CreateButton } from "../components/dashboardPage/CreateButton"
+import { CreateButton } from "../components/dashboardPage/CreateButton";
 import NavigationBar from "../components/dashboardPage/NavigationBar";
 
 /**
@@ -42,7 +42,7 @@ function DashboardPage() {
           const capsulesArray: TimeCapsule[] = Object.entries(data).map(
             ([id, capsule]) => ({
               id,
-              ...(capsule as TimeCapsule), // Spread the capsule data
+              ...(capsule as TimeCapsule) // Spread the capsule data
             })
           );
           setCapsules(capsulesArray);
@@ -98,7 +98,9 @@ function DashboardPage() {
               <div className="p-6">
                 <h2 className="text-xl font-semibold mb-2">{capsule.title}</h2>
                 <p className="text-gray-600 mb-2">Status: {capsule.status}</p>
-                <p className="text-gray-600">Unlock Date: {capsule.unlockDate}</p>
+                <p className="text-gray-600">
+                  Unlock Date: {capsule.unlockDate}
+                </p>
               </div>
             </div>
           ))}
@@ -106,10 +108,7 @@ function DashboardPage() {
       </div>
       {/* Create Time Capsule Button (Fixed at Bottom-Right Corner) */}
       <div className="fixed bottom-8 right-8">
-        <CreateButton
-          to="/create-capsule"
-          text="Create Time Capsule"
-        />
+        <CreateButton to="/create-capsule" text="Create Time Capsule" />
       </div>
     </div>
   );
