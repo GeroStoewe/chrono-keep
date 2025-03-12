@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import GradientHeading from "../components/GradientHeading";
 import { TextInputField } from "../components/security/TextInputField";
 import { SubmitButton } from "../components/SubmitButton";
+import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "firebase/storage";
 
 /**
  * CreateCapsulePage Component
@@ -28,14 +29,24 @@ function CreateCapsulePage() {
     setIsLoading(true);
 
     try {
-      // Save the time capsule data to Firebase
+        let imageUrl = "";
+
+         // Upload image to Firebase Storage (if an image is selected)
+      if (imageFile) {
+        const storage = getStorage();
+        const fileRef = storageRef(storage, `timeCapsules/${imageFile.name}`);
+        await uploadBytes(fileRef, imageFile); // Upload the file
+        imageUrl = await getDownloadURL(fileRef); // Get the download URL
+      }
+
+      // Save the time capsule data to Firebase Realtime Database
       const newCapsuleRef = ref(realtimeDb, "timeCapsules");
       await push(newCapsuleRef, {
         title,
         message,
         unlockDate,
         status: "saved", // Default status
-        imageUrl: "", // Placeholder for image URL (to be updated after upload)
+        imageUrl, // Placeholder for image URL (to be updated after upload)
       });
 
       // Redirect to the dashboard after successful submission
