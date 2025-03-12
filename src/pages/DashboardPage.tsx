@@ -3,7 +3,7 @@ import { ref, onValue } from "firebase/database";
 import { realtimeDb } from "../firebase.ts";
 import { Link } from "react-router-dom";
 import GradientHeading from "../components/GradientHeading";
-import { SubmitButton } from "../components/SubmitButton";
+import { CreateButton } from "../components/dashboardPage/CreateButton"
 
 /**
  * Dashboard Component
@@ -18,7 +18,7 @@ import { SubmitButton } from "../components/SubmitButton";
 
 // Define the type for a time capsule
 interface TimeCapsule {
-  id: string; // Add ID for unique key
+  id: string; // Unique ID for each capsule
   title: string;
   status: string;
   unlockDate: string;
@@ -30,6 +30,7 @@ function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Fetch time capsules from Firebase Realtime Database
   useEffect(() => {
     const dbRef = ref(realtimeDb, "timeCapsules");
     onValue(
@@ -42,7 +43,7 @@ function DashboardPage() {
           const capsulesArray: TimeCapsule[] = Object.entries(data).map(
             ([id, capsule]) => ({
               id,
-              ...(capsule as TimeCapsule) // Spread the capsule data
+              ...(capsule as TimeCapsule), // Spread the capsule data
             })
           );
           setCapsules(capsulesArray);
@@ -71,19 +72,13 @@ function DashboardPage() {
           <div className="flex justify-between items-center py-4">
             <GradientHeading text="CHRONO KEEP" />
             <div className="flex space-x-8">
-              <Link
-                to="/archive"
-                className="text-gray-800 hover:text-purple-700"
-              >
+              <Link to="/archive" className="text-gray-800 hover:text-purple-700">
                 Archive
               </Link>
               <Link to="/about" className="text-gray-800 hover:text-purple-700">
                 About Us
               </Link>
-              <Link
-                to="/profile"
-                className="text-gray-800 hover:text-purple-700"
-              >
+              <Link to="/profile" className="text-gray-800 hover:text-purple-700">
                 Profile
               </Link>
             </div>
@@ -93,11 +88,23 @@ function DashboardPage() {
 
       {/* Dashboard Content */}
       <div className="max-w-6xl mx-auto p-8">
+        {/* Welcome Message */}
+        <div className="mb-8">
+          <h1 className="text-4xl font-bold text-white mb-2">
+            Welcome to the Dashboard
+          </h1>
+          <p className="text-gray-200 mb-4">
+            Here you can create, view and manage your time capsules securely.
+          </p>
+        </div>
+
         {/* Create Time Capsule Button */}
-        <div className="flex justify-end mb-8">
-          <Link to="/create-capsule">
-            <SubmitButton text="Create Time Capsule" isLoading={false} />
-          </Link>
+        <div className="flex justify-start mb-4">
+        <CreateButton
+              to="/create-capsule"
+              text="Create Time Capsule"
+              icon="📦" // Optional icon
+            />
         </div>
 
         {/* Time Capsules Grid */}
@@ -105,7 +112,7 @@ function DashboardPage() {
           {capsules.map((capsule) => (
             <div
               key={capsule.id}
-              className="bg-white rounded-xl shadow-lg overflow-hidden"
+              className="bg-white rounded-xl shadow-lg overflow-hidden transform transition-transform hover:scale-105"
             >
               {/* Image Placeholder */}
               <img
@@ -118,9 +125,7 @@ function DashboardPage() {
               <div className="p-6">
                 <h2 className="text-xl font-semibold mb-2">{capsule.title}</h2>
                 <p className="text-gray-600 mb-2">Status: {capsule.status}</p>
-                <p className="text-gray-600">
-                  Unlock Date: {capsule.unlockDate}
-                </p>
+                <p className="text-gray-600">Unlock Date: {capsule.unlockDate}</p>
               </div>
             </div>
           ))}

@@ -6,6 +6,7 @@ import LoginPage from "../src/pages/LoginPage";
 import SignUpPage from "../src/pages/SignUpPage";
 import ForgotPasswordPage from "../src/pages/ForgotPasswordPage";
 import DashboardPage from "../src/pages/DashboardPage";
+import CreateCapsulePage from "./pages/CreateCapsulePage";
 
 /**
  * The main application component that sets up routing and provides authentication context to the entire app.
@@ -27,6 +28,7 @@ function App() {
           <Route path="/signup" element={<SignUpPage />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/create-capsule" element={<CreateCapsulePage />} />
         </Routes>
       </AuthProvider>
     </Router>
