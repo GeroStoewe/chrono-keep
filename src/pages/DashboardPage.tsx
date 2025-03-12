@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import { ref, onValue } from "firebase/database";
 import { realtimeDb } from "../firebase.ts";
-import { Link } from "react-router-dom";
-import GradientHeading from "../components/GradientHeading";
 import { CreateButton } from "../components/dashboardPage/CreateButton"
+import NavigationBar from "../components/dashboardPage/NavigationBar";
 
 /**
  * Dashboard Component
@@ -67,24 +66,7 @@ function DashboardPage() {
   return (
     <div className="min-h-screen bg-gradient-to-tl from-blue-400 to-purple-700">
       {/* Navigation Bar */}
-      <nav className="bg-white shadow-lg">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="flex justify-between items-center py-4">
-            <GradientHeading text="CHRONO KEEP" />
-            <div className="flex space-x-8">
-              <Link to="/archive" className="text-gray-800 hover:text-purple-700">
-                Archive
-              </Link>
-              <Link to="/about" className="text-gray-800 hover:text-purple-700">
-                About Us
-              </Link>
-              <Link to="/profile" className="text-gray-800 hover:text-purple-700">
-                Profile
-              </Link>
-            </div>
-          </div>
-        </div>
-      </nav>
+      <NavigationBar />
 
       {/* Dashboard Content */}
       <div className="max-w-6xl mx-auto p-8">

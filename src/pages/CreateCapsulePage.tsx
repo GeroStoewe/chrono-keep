@@ -6,7 +6,7 @@ import GradientHeading from "../components/GradientHeading";
 import { TextInputField } from "../components/security/TextInputField";
 import { SubmitButton } from "../components/SubmitButton";
 import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "firebase/storage";
-
+import NavigationBar from "../components/dashboardPage/NavigationBar";
 /**
  * CreateCapsulePage Component
  *
@@ -60,6 +60,9 @@ function CreateCapsulePage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-tl from-blue-400 to-purple-700">
+      {/* Use the NavBar component */}
+      <NavigationBar />
+
       <div className="flex flex-col lg:flex-row bg-white rounded-xl shadow-2xl max-w-6xl w-full">
         {/* Left section - Create Time Capsul Image */}
         <div className="lg:w-1/2 w-full">
