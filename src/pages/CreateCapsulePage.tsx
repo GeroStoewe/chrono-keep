@@ -60,7 +60,18 @@ function CreateCapsulePage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-tl from-blue-400 to-purple-700">
-      <div className="bg-white rounded-xl shadow-2xl p-8 max-w-md w-full">
+      <div className="flex flex-col lg:flex-row bg-white rounded-xl shadow-2xl max-w-6xl w-full">
+        {/* Left section - Create Time Capsul Image */}
+        <div className="lg:w-1/2 w-full">
+          <img
+            src="/create-capsule.jpeg"
+            alt="Capsule Form Illustration"
+            className="w-full h-full object-cover rounded-l-xl select-none"
+          />
+        </div>
+
+      {/* Right section - Form */}
+      <div className="bg-white rounded-xl shadow-2xl p-8 max-w-xl w-full">
         <GradientHeading text="Create Time Capsule" />
 
         {/* Form */}
@@ -132,6 +143,7 @@ function CreateCapsulePage() {
         </p>
       </div>
     </div>
+   </div>
   );
 }
 

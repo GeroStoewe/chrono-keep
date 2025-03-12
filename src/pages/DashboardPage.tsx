@@ -107,7 +107,7 @@ function DashboardPage() {
             >
               {/* Image Placeholder */}
               <img
-                src={capsule.imageUrl || "/placeholder-image.png"} // Use placeholder if no image
+                src={capsule.imageUrl || "/dashboard-placeholder.jpeg"} // Use placeholder image if no image
                 alt={capsule.title}
                 className="w-full h-48 object-cover"
               />
