@@ -19,6 +19,7 @@ import NavigationBar from "../components/dashboardPage/NavigationBar";
 interface TimeCapsule {
   id: string; // Unique ID for each capsule
   title: string;
+  message: string; 
   status: string;
   unlockDate: string;
   imageUrl?: string; // Optional property for image placeholder
@@ -97,6 +98,7 @@ function DashboardPage() {
               {/* Capsule Details */}
               <div className="p-6">
                 <h2 className="text-xl font-semibold mb-2">{capsule.title}</h2>
+                <p className="text-gray-600">Message: {capsule.message}</p>
                 <p className="text-gray-600 mb-2">Status: {capsule.status}</p>
                 <p className="text-gray-600">
                   Unlock Date: {capsule.unlockDate}
