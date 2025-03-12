@@ -98,15 +98,6 @@ function DashboardPage() {
           </p>
         </div>
 
-        {/* Create Time Capsule Button */}
-        <div className="flex justify-start mb-4">
-        <CreateButton
-              to="/create-capsule"
-              text="Create Time Capsule"
-              icon="📦" // Optional icon
-            />
-        </div>
-
         {/* Time Capsules Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {capsules.map((capsule) => (
@@ -130,6 +121,13 @@ function DashboardPage() {
             </div>
           ))}
         </div>
+      </div>
+      {/* Create Time Capsule Button (Fixed at Bottom-Right Corner) */}
+      <div className="fixed bottom-8 right-8">
+        <CreateButton
+          to="/create-capsule"
+          text="Create Time Capsule"
+        />
       </div>
     </div>
   );
