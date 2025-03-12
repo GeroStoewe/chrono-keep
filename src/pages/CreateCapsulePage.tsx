@@ -83,15 +83,28 @@ function CreateCapsulePage() {
 
           {/* Image Upload (Optional) */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-gray-800 font-semibold mb-0.5 select-none">
               Upload Image (Optional)
             </label>
             <input
               type="file"
               accept="image/*"
               onChange={(e) => setImageFile(e.target.files?.[0] || null)}
-              className="mt-1 block w-full"
+              className="hidden"
+              id="file-upload"
             />
+
+          <div>
+            <label
+                htmlFor="file-upload"
+                className="cursor-pointer bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95 transition-all duration-300 ease-in-out block text-center"
+              >
+                Choose File
+              </label>
+              <p className="text-sm text-gray-500 mt-2 text-center">
+                {imageFile ? imageFile.name : "No file chosen"}
+              </p>
+            </div>
           </div>
 
           {/* Submit Button */}
