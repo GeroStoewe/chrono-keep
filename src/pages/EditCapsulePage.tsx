@@ -12,6 +12,7 @@ import { TextInputField } from "../components/security/TextInputField";
 import { SubmitButton } from "../components/SubmitButton";
 import NavigationBar from "../components/dashboardPage/NavigationBar";
 import GradientHeading from "../components/GradientHeading.tsx";
+import BackArrowButton from "../components/editCapsulePage/BackArrowButton.tsx";
 
 //TODO Add comments.
 
@@ -124,6 +125,18 @@ function EditCapsulePage() {
     setSnackbar({ ...snackbar, open: false });
   };
 
+  // Handle status change
+  const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newStatus = e.target.value;
+    setStatus(newStatus);
+
+    // Automatically set release date to today if status is "unlocked"
+    if (newStatus === "unlocked") {
+      const today = new Date().toISOString().split("T")[0]; // Get today's date in YYYY-MM-DD format
+      setReleaseDate(today);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-tl from-blue-400 to-purple-700">
       <NavigationBar />
@@ -131,6 +144,10 @@ function EditCapsulePage() {
         {/* Form Wrapper */}
         <div className="bg-white rounded-lg shadow-xl p-8">
           <GradientHeading text="Edit Time Capsule" />
+          {/* BackArrowButton */}
+          <div className="mb-4">
+            <BackArrowButton />
+          </div>
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -169,7 +186,7 @@ function EditCapsulePage() {
               <div className="relative">
                 <select
                   value={status}
-                  onChange={(e) => setStatus(e.target.value)}
+                  onChange={handleStatusChange}
                   className="w-full px-4 py-3 pr-100 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-transparent transition duration-300 transform hover:scale-105 focus:gradient-border appearance-none"
                   required
                 >
