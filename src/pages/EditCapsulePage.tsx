@@ -81,7 +81,7 @@ function EditCapsulePage() {
       // Show success snackbar
       setSnackbar({ open: true, message: "Capsule updated successfully!" });
       setTimeout(() => {
-        navigate(status === "unlocked" ? "/archive" : "/dashboard"); // Navigate back to dashboard after 2 seconds
+        navigate(status === "unlocked" ? "/archive" : "/dashboard"); // Navigate back to archive if status is unlocked, otherwise navigate back to dashboard after 2 seconds
       }, 2000);
     } catch (error) {
       console.error("Error updating time capsule:", error);
