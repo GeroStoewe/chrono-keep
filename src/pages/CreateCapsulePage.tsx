@@ -95,7 +95,6 @@ function CreateCapsulePage() {
             />
           </div>
           
-
           {/* Message Input */}
           <TextInputField
             label="Message"
@@ -107,7 +106,7 @@ function CreateCapsulePage() {
 
           {/* Release Date Input */}
           <TextInputField
-            label="Unlock Date"
+            label="Release Date"
             type="date"
             value={releaseDate}
             onChange={(e) => setReleaseDate(e.target.value)}
@@ -119,17 +118,23 @@ function CreateCapsulePage() {
             <label className="block text-gray-800 font-semibold mb-2">
               Status
             </label>
+            <div className="relative">
             <select
               value={status}
               onChange={(e) => setStatus(e.target.value)}
-              className="w-full p-2 border border-gray-300 rounded-lg"
+              className="w-full px-4 py-3 pr-100 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-transparent transition duration-300 transform hover:scale-105 focus:gradient-border appearance-none"
               required
             >
               <option value="locked">Locked</option>
               <option value="unlocked">Unlocked</option>
             </select>
+            {/* Custom Arrow (SVG) */}
+            <div className="absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none">
+              ▼ {/* You can replace this with an actual SVG icon */}
+            </div>
           </div>
-
+        </div>
+        
           {/* Image Upload */}
           <div>
             <label className="block text-gray-800 font-semibold mb-0.5 select-none">
