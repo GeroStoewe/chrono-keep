@@ -1,7 +1,12 @@
 import { useEffect, useState } from "react";
 import { ref, onValue, update, remove } from "firebase/database";
 import { realtimeDb } from "../firebase.ts";
-import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "firebase/storage";
+import {
+  getStorage,
+  ref as storageRef,
+  uploadBytes,
+  getDownloadURL
+} from "firebase/storage";
 import { useNavigate, useParams } from "react-router-dom";
 import { TextInputField } from "../components/security/TextInputField";
 import { SubmitButton } from "../components/SubmitButton";
@@ -52,7 +57,7 @@ function EditCapsulePage() {
         await uploadBytes(fileRef, imageFile);
         updatedImageUrl = await getDownloadURL(fileRef);
       }
-      
+
       // Update the capsule data in Firebase
       const dbRef = ref(realtimeDb, `timeCapsules/${id}`);
       if (status === "unlocked") {
@@ -63,20 +68,20 @@ function EditCapsulePage() {
           message,
           releaseDate,
           status,
-          imageUrl: updatedImageUrl,
+          imageUrl: updatedImageUrl
         });
 
-    // Remove from active capsules
-    await remove(dbRef);
-    } else {
-      await update(dbRef, {
-        title,
-        message,
-        releaseDate,
-        status,
-        imageUrl: updatedImageUrl,
-      });
-    }
+        // Remove from active capsules
+        await remove(dbRef);
+      } else {
+        await update(dbRef, {
+          title,
+          message,
+          releaseDate,
+          status,
+          imageUrl: updatedImageUrl
+        });
+      }
 
       // Show success snackbar
       setSnackbar({ open: true, message: "Capsule updated successfully!" });
@@ -123,98 +128,95 @@ function EditCapsulePage() {
     <div className="min-h-screen bg-gradient-to-tl from-blue-400 to-purple-700">
       <NavigationBar />
       <div className="max-w-6xl mx-auto p-8">
-
         {/* Form Wrapper */}
         <div className="bg-white rounded-lg shadow-xl p-8">
-        <GradientHeading text="Edit Time Capsule" />
-    
-        {/* Form */}
-        <form onSubmit={handleSubmit} 
-        className="space-y-6"
-        >
-          {/* Title Input */}
-          <TextInputField
-            label="Title"
-            type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            required
-          />
+          <GradientHeading text="Edit Time Capsule" />
 
-          {/* Message Input */}
-          <TextInputField
-            label="Message"
-            type="text"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            required
-          />
-
-          {/* Release Date Input */}
-          <TextInputField
-            label="Release Date"
-            type="date"
-            value={releaseDate}
-            onChange={(e) => setReleaseDate(e.target.value)}
-            required
-          />
-        
-        {/* Status Input */}
-          <div>
-            <label className="block text-gray-800 font-semibold mb-2">
-              Status
-            </label>
-            <div className="relative">
-            <select
-              value={status}
-              onChange={(e) => setStatus(e.target.value)}
-              className="w-full px-4 py-3 pr-100 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-transparent transition duration-300 transform hover:scale-105 focus:gradient-border appearance-none"
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Title Input */}
+            <TextInputField
+              label="Title"
+              type="text"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
               required
-            >
-              <option value="locked">Locked</option>
-              <option value="unlocked">Unlocked</option>
-            </select>
-            {/* Custom Arrow (SVG) */}
-            <div className="absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none">
-              ▼ {/* You can replace this with an actual SVG icon */}
-            </div>
-          </div>
-        </div>
-
-          {/* Image Upload */}
-          <div>
-            <label className="block text-gray-800 font-semibold mb-2">
-              Upload New Image (Optional)
-            </label>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={(e) => setImageFile(e.target.files?.[0] || null)}
-              className="hidden"
-              id="file-upload"
             />
-            <label
-              htmlFor="file-upload"
-              className="cursor-pointer bg-blue-500 text-white px-4 py-2 rounded-lg"
-            >
-              Choose File
-            </label>
-            {imageUrl && (
-              <img
-                src={imageUrl}
-                alt="Current Capsule Image"
-                className="mt-4 w-32 h-32 object-cover rounded-lg"
+
+            {/* Message Input */}
+            <TextInputField
+              label="Message"
+              type="text"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              required
+            />
+
+            {/* Release Date Input */}
+            <TextInputField
+              label="Release Date"
+              type="date"
+              value={releaseDate}
+              onChange={(e) => setReleaseDate(e.target.value)}
+              required
+            />
+
+            {/* Status Input */}
+            <div>
+              <label className="block text-gray-800 font-semibold mb-2">
+                Status
+              </label>
+              <div className="relative">
+                <select
+                  value={status}
+                  onChange={(e) => setStatus(e.target.value)}
+                  className="w-full px-4 py-3 pr-100 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-transparent transition duration-300 transform hover:scale-105 focus:gradient-border appearance-none"
+                  required
+                >
+                  <option value="locked">Locked</option>
+                  <option value="unlocked">Unlocked</option>
+                </select>
+                {/* Custom Arrow (SVG) */}
+                <div className="absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none">
+                  ▼ {/* You can replace this with an actual SVG icon */}
+                </div>
+              </div>
+            </div>
+
+            {/* Image Upload */}
+            <div>
+              <label className="block text-gray-800 font-semibold mb-2">
+                Upload New Image (Optional)
+              </label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => setImageFile(e.target.files?.[0] || null)}
+                className="hidden"
+                id="file-upload"
               />
-            )}
-          </div>
+              <label
+                htmlFor="file-upload"
+                className="cursor-pointer bg-blue-500 text-white px-4 py-2 rounded-lg"
+              >
+                Choose File
+              </label>
+              {imageUrl && (
+                <img
+                  src={imageUrl}
+                  alt="Current Capsule Image"
+                  className="mt-4 w-32 h-32 object-cover rounded-lg"
+                />
+              )}
+            </div>
 
-          {/* Submit Button */}
-          <div className="mt-6">
-            <SubmitButton text="Update Capsule" isLoading={isLoading} />
-          </div>
+            {/* Submit Button */}
+            <div className="mt-6">
+              <SubmitButton text="Update Capsule" isLoading={isLoading} />
+            </div>
 
-          {/* Delete Button */}
-          <div className="mt-4">
+            {/* Delete Button */}
+            <div className="mt-4">
               <button
                 type="button"
                 onClick={handleDelete}
@@ -224,11 +226,11 @@ function EditCapsulePage() {
                 Delete Capsule
               </button>
             </div>
-        </form>
+          </form>
+        </div>
       </div>
-    </div>
-    {/* Snackbar */}
-    {snackbar.open && (
+      {/* Snackbar */}
+      {snackbar.open && (
         <div className="fixed bottom-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg">
           {snackbar.message}
           <button onClick={closeSnackbar} className="ml-4">
@@ -236,7 +238,7 @@ function EditCapsulePage() {
           </button>
         </div>
       )}
-  </div>
+    </div>
   );
 }
 

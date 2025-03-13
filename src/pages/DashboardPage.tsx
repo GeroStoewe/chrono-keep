@@ -6,7 +6,6 @@ import { realtimeDb } from "../firebase.ts";
 import { CreateButton } from "../components/dashboardPage/CreateButton";
 import NavigationBar from "../components/dashboardPage/NavigationBar";
 
-
 /**
  * Dashboard Component
  *
@@ -22,7 +21,7 @@ import NavigationBar from "../components/dashboardPage/NavigationBar";
 interface TimeCapsule {
   id: string; // Unique ID for each capsule
   title: string;
-  message: string; 
+  message: string;
   status: string;
   releaseDate: string;
   imageUrl?: string; // Optional property for image placeholder
@@ -110,7 +109,8 @@ function DashboardPage() {
                 <h2 className="text-xl font-semibold mb-2">{capsule.title}</h2>
                 <p className="text-gray-600 mb-2">Message: {capsule.message}</p>
                 <p className="text-gray-600 mb-2">Status: {capsule.status}</p>
-                <p className="text-gray-600 mb-2">Release Date: {capsule.releaseDate}
+                <p className="text-gray-600 mb-2">
+                  Release Date: {capsule.releaseDate}
                 </p>
               </div>
             </div>

@@ -24,10 +24,12 @@ function ArchivePage() {
       const data = snapshot.val();
       if (data && typeof data === "object") {
         // Convert the returned object to an array of capsules
-        const capsulesArray: TimeCapsule[] = Object.entries(data).map(([id, capsuleData]) => ({
-          id,
-          ...(capsuleData as Omit<TimeCapsule, "id">),
-        }));
+        const capsulesArray: TimeCapsule[] = Object.entries(data).map(
+          ([id, capsuleData]) => ({
+            id,
+            ...(capsuleData as Omit<TimeCapsule, "id">)
+          })
+        );
         setCapsules(capsulesArray);
       } else {
         setCapsules([]);
@@ -64,7 +66,9 @@ function ArchivePage() {
 
                 {/* Capsule Details */}
                 <div className="p-6">
-                  <h2 className="text-xl font-semibold mb-2">{capsule.title}</h2>
+                  <h2 className="text-xl font-semibold mb-2">
+                    {capsule.title}
+                  </h2>
                   <p className="text-gray-600">Message: {capsule.message}</p>
                   <p className="text-gray-600 mb-2">Status: {capsule.status}</p>
                   <p className="text-gray-600">

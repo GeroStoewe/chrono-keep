@@ -2,7 +2,12 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ref, push } from "firebase/database";
 import { realtimeDb } from "../firebase.ts";
-import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "firebase/storage";
+import {
+  getStorage,
+  ref as storageRef,
+  uploadBytes,
+  getDownloadURL
+} from "firebase/storage";
 import GradientHeading from "../components/GradientHeading";
 import { TextInputField } from "../components/security/TextInputField";
 import { SubmitButton } from "../components/SubmitButton";
@@ -31,9 +36,9 @@ function CreateCapsulePage() {
     setIsLoading(true);
 
     try {
-        let imageUrl = "";
+      let imageUrl = "";
 
-         // Upload image to Firebase Storage (if an image is selected)
+      // Upload image to Firebase Storage (if an image is selected)
       if (imageFile) {
         const storage = getStorage();
         const fileRef = storageRef(storage, `timeCapsules/${imageFile.name}`);
@@ -48,26 +53,26 @@ function CreateCapsulePage() {
         message,
         releaseDate,
         status, // Status is either "locked" or "unlocked"
-        imageUrl, // Placeholder for image URL (to be updated after upload)
+        imageUrl // Placeholder for image URL (to be updated after upload)
       });
 
       // Show success snackbar notification
       //TODO add x to manually dismiss the snackbar like you did in edit capsule page
       enqueueSnackbar("The capsule is saved successfully!", {
         variant: "success",
-        autoHideDuration: 2000, // Auto-hide after 3 seconds
+        autoHideDuration: 2000 // Auto-hide after 3 seconds
       });
 
       // Redirect to the dashboard after successful submission
       setTimeout(() => {
-      navigate("/dashboard");
-    }, 2000); // Wait for 2 seconds before navigating
+        navigate("/dashboard");
+      }, 2000); // Wait for 2 seconds before navigating
     } catch (error) {
       console.error("Error saving time capsule:", error);
       // Show error snackbar notification
       enqueueSnackbar("Failed to save the capsule. Please try again.", {
         variant: "error",
-        autoHideDuration: 2000,
+        autoHideDuration: 2000
       });
     } finally {
       setIsLoading(false);
@@ -86,109 +91,108 @@ function CreateCapsulePage() {
           />
         </div>
 
-      {/* Right section - Form */}
-      <div className="w-full lg:w-1/2 p-8">
-        <GradientHeading text="Create Time Capsule" />
+        {/* Right section - Form */}
+        <div className="w-full lg:w-1/2 p-8">
+          <GradientHeading text="Create Time Capsule" />
 
-        {/* Form */}
-        <form onSubmit={handleSubmit} 
-        className="space-y-6"
-        >
-          <div className="flex space-x-4">
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="flex space-x-4"></div>
+            {/* Title Input */}
+            <div className="flex-1">
+              <TextInputField
+                label="Title"
+                type="text"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                required
+              />
+            </div>
 
-          </div>
-          {/* Title Input */}
-          <div className="flex-1">
+            {/* Message Input */}
             <TextInputField
-              label="Title"
+              label="Message"
               type="text"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
               required
             />
-          </div>
-          
-          {/* Message Input */}
-          <TextInputField
-            label="Message"
-            type="text"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            required
-          />
 
-          {/* Release Date Input */}
-          <TextInputField
-            label="Release Date"
-            type="date"
-            value={releaseDate}
-            onChange={(e) => setReleaseDate(e.target.value)}
-            required
-          />
-
-          {/* Status Input */}
-          <div>
-            <label className="block text-gray-800 font-semibold mb-2">
-              Status
-            </label>
-            <div className="relative">
-            <select
-              value={status}
-              onChange={(e) => setStatus(e.target.value)}
-              className="w-full px-4 py-3 pr-100 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-transparent transition duration-300 transform hover:scale-105 focus:gradient-border appearance-none"
+            {/* Release Date Input */}
+            <TextInputField
+              label="Release Date"
+              type="date"
+              value={releaseDate}
+              onChange={(e) => setReleaseDate(e.target.value)}
               required
-            >
-              <option value="locked">Locked</option>
-              <option value="unlocked">Unlocked</option>
-            </select>
-            {/* Custom Arrow (SVG) */}
-            <div className="absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none">
-              ▼ {/* You can replace this with an actual SVG icon */}
-            </div>
-          </div>
-        </div>
-        
-          {/* Image Upload */}
-          <div>
-            <label className="block text-gray-800 font-semibold mb-0.5 select-none">
-              Upload Image (Optional)
-            </label>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={(e) => setImageFile(e.target.files?.[0] || null)}
-              className="hidden"
-              id="file-upload"
             />
 
-          <div>
-            <label
-                htmlFor="file-upload"
-                className="cursor-pointer bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95 transition-all duration-300 ease-in-out block text-center"
-              >
-                Choose File
+            {/* Status Input */}
+            <div>
+              <label className="block text-gray-800 font-semibold mb-2">
+                Status
               </label>
-              <p className="text-sm text-gray-500 mt-2 text-center">
-                {imageFile ? imageFile.name : "No file chosen"}
-              </p>
+              <div className="relative">
+                <select
+                  value={status}
+                  onChange={(e) => setStatus(e.target.value)}
+                  className="w-full px-4 py-3 pr-100 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-transparent transition duration-300 transform hover:scale-105 focus:gradient-border appearance-none"
+                  required
+                >
+                  <option value="locked">Locked</option>
+                  <option value="unlocked">Unlocked</option>
+                </select>
+                {/* Custom Arrow (SVG) */}
+                <div className="absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none">
+                  ▼ {/* You can replace this with an actual SVG icon */}
+                </div>
+              </div>
             </div>
-          </div>
 
-          {/* Submit Button */}
-          <div className="mt-6">
-            <SubmitButton text="Save Capsule" isLoading={isLoading} />
-          </div>
-        </form>
+            {/* Image Upload */}
+            <div>
+              <label className="block text-gray-800 font-semibold mb-0.5 select-none">
+                Upload Image (Optional)
+              </label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => setImageFile(e.target.files?.[0] || null)}
+                className="hidden"
+                id="file-upload"
+              />
 
-        {/* Back to Dashboard */}
-        <p className="mt-4 text-center text-gray-800">
-          <Link to="/dashboard" className="text-blue-600 hover:text-purple-700">
-            Back to Dashboard
-          </Link>
-        </p>
+              <div>
+                <label
+                  htmlFor="file-upload"
+                  className="cursor-pointer bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95 transition-all duration-300 ease-in-out block text-center"
+                >
+                  Choose File
+                </label>
+                <p className="text-sm text-gray-500 mt-2 text-center">
+                  {imageFile ? imageFile.name : "No file chosen"}
+                </p>
+              </div>
+            </div>
+
+            {/* Submit Button */}
+            <div className="mt-6">
+              <SubmitButton text="Save Capsule" isLoading={isLoading} />
+            </div>
+          </form>
+
+          {/* Back to Dashboard */}
+          <p className="mt-4 text-center text-gray-800">
+            <Link
+              to="/dashboard"
+              className="text-blue-600 hover:text-purple-700"
+            >
+              Back to Dashboard
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
-   </div>
   );
 }
 
