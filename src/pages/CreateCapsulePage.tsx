@@ -1,17 +1,18 @@
 import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { ref, push } from "firebase/database";
 import { realtimeDb } from "../firebase.ts";
-import { Link, useNavigate } from "react-router-dom";
-import GradientHeading from "../components/GradientHeading";
-import { TextInputField } from "../components/security/TextInputField";
-import { SubmitButton } from "../components/SubmitButton";
 import {
   getStorage,
   ref as storageRef,
   uploadBytes,
   getDownloadURL
 } from "firebase/storage";
-import NavigationBar from "../components/dashboardPage/NavigationBar";
+import GradientHeading from "../components/GradientHeading";
+import { TextInputField } from "../components/security/TextInputField";
+import { SubmitButton } from "../components/SubmitButton";
+import { enqueueSnackbar } from "notistack"; // Import useSnackbar
+
 /**
  * CreateCapsulePage Component
  *
@@ -24,7 +25,8 @@ function CreateCapsulePage() {
   const navigate = useNavigate();
   const [title, setTitle] = useState("");
   const [message, setMessage] = useState("");
-  const [unlockDate, setUnlockDate] = useState("");
+  const [releaseDate, setReleaseDate] = useState("");
+  const [status, setStatus] = useState("locked"); // Default status is "locked"
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -49,15 +51,29 @@ function CreateCapsulePage() {
       await push(newCapsuleRef, {
         title,
         message,
-        unlockDate,
-        status: "saved", // Default status
+        releaseDate,
+        status, // Status is either "locked" or "unlocked"
         imageUrl // Placeholder for image URL (to be updated after upload)
       });
 
+      // Show success snackbar notification
+      //TODO add x to manually dismiss the snackbar like you did in edit capsule page
+      enqueueSnackbar("The capsule is saved successfully!", {
+        variant: "success",
+        autoHideDuration: 2000 // Auto-hide after 3 seconds
+      });
+
       // Redirect to the dashboard after successful submission
-      navigate("/dashboard");
+      setTimeout(() => {
+        navigate("/dashboard");
+      }, 2000); // Wait for 2 seconds before navigating
     } catch (error) {
       console.error("Error saving time capsule:", error);
+      // Show error snackbar notification
+      enqueueSnackbar("Failed to save the capsule. Please try again.", {
+        variant: "error",
+        autoHideDuration: 2000
+      });
     } finally {
       setIsLoading(false);
     }
@@ -65,10 +81,7 @@ function CreateCapsulePage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-tl from-blue-400 to-purple-700">
-      {/* Use the NavBar component */}
-      <NavigationBar />
-
-      <div className="flex flex-col lg:flex-row bg-white rounded-xl shadow-2xl max-w-6xl w-full">
+      <div className="flex flex-col lg:flex-row bg-white rounded-xl shadow-2xl max-w-4xl w-full">
         {/* Left section - Create Time Capsul Image */}
         <div className="lg:w-1/2 w-full">
           <img
@@ -79,19 +92,22 @@ function CreateCapsulePage() {
         </div>
 
         {/* Right section - Form */}
-        <div className="bg-white rounded-xl shadow-2xl p-8 max-w-xl w-full">
+        <div className="w-full lg:w-1/2 p-8">
           <GradientHeading text="Create Time Capsule" />
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="flex space-x-4"></div>
             {/* Title Input */}
-            <TextInputField
-              label="Title"
-              type="text"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              required
-            />
+            <div className="flex-1">
+              <TextInputField
+                label="Title"
+                type="text"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                required
+              />
+            </div>
 
             {/* Message Input */}
             <TextInputField
@@ -102,16 +118,38 @@ function CreateCapsulePage() {
               required
             />
 
-            {/* Unlock Date Input */}
+            {/* Release Date Input */}
             <TextInputField
-              label="Unlock Date"
+              label="Release Date"
               type="date"
-              value={unlockDate}
-              onChange={(e) => setUnlockDate(e.target.value)}
+              value={releaseDate}
+              onChange={(e) => setReleaseDate(e.target.value)}
               required
             />
 
-            {/* Image Upload (Optional) */}
+            {/* Status Input */}
+            <div>
+              <label className="block text-gray-800 font-semibold mb-2">
+                Status
+              </label>
+              <div className="relative">
+                <select
+                  value={status}
+                  onChange={(e) => setStatus(e.target.value)}
+                  className="w-full px-4 py-3 pr-100 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-transparent transition duration-300 transform hover:scale-105 focus:gradient-border appearance-none"
+                  required
+                >
+                  <option value="locked">Locked</option>
+                  <option value="unlocked">Unlocked</option>
+                </select>
+                {/* Custom Arrow (SVG) */}
+                <div className="absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none">
+                  ▼ {/* You can replace this with an actual SVG icon */}
+                </div>
+              </div>
+            </div>
+
+            {/* Image Upload */}
             <div>
               <label className="block text-gray-800 font-semibold mb-0.5 select-none">
                 Upload Image (Optional)

@@ -10,6 +10,8 @@ import CreateCapsulePage from "./pages/CreateCapsulePage";
 import AboutPage from "./pages/AboutPage";
 import ArchivePage from "./pages/ArchivePage";
 import ProfilePage from "./pages/ProfilePage";
+import EditCapsulePage from "./pages/EditCapsulePage";
+import { SnackbarProvider } from "notistack";
 
 /**
  * The main application component that sets up routing and provides authentication context to the entire app.
@@ -23,21 +25,27 @@ import ProfilePage from "./pages/ProfilePage";
  */
 function App() {
   return (
-    <Router>
-      <AuthProvider>
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/signup" element={<SignUpPage />} />
-          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-          <Route path="/dashboard" element={<DashboardPage />} />
-          <Route path="/create-capsule" element={<CreateCapsulePage />} />
-          <Route path="/archive" element={<ArchivePage />} /> {/* New route */}
-          <Route path="/about" element={<AboutPage />} /> {/* New route */}
-          <Route path="/profile" element={<ProfilePage />} /> {/* New route */}
-        </Routes>
-      </AuthProvider>
-    </Router>
+    <>
+      <SnackbarProvider maxSnack={3}></SnackbarProvider>
+      <Router>
+        <AuthProvider>
+          <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/signup" element={<SignUpPage />} />
+            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+            <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/create-capsule" element={<CreateCapsulePage />} />
+            <Route path="/archive" element={<ArchivePage />} />{" "}
+            {/* New route */}
+            <Route path="/about" element={<AboutPage />} /> {/* New route */}
+            <Route path="/profile" element={<ProfilePage />} />{" "}
+            {/* New route */}
+            <Route path="/edit-capsule/:id" element={<EditCapsulePage />} />
+          </Routes>
+        </AuthProvider>
+      </Router>
+    </>
   );
 }
 
