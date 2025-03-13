@@ -1,12 +1,14 @@
 import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { ref, push } from "firebase/database";
 import { realtimeDb } from "../firebase.ts";
-import { Link, useNavigate } from "react-router-dom";
+import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "firebase/storage";
 import GradientHeading from "../components/GradientHeading";
 import { TextInputField } from "../components/security/TextInputField";
 import { SubmitButton } from "../components/SubmitButton";
-import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "firebase/storage";
+
 //import NavigationBar from "../components/dashboardPage/NavigationBar";
+
 /**
  * CreateCapsulePage Component
  *
@@ -19,7 +21,8 @@ function CreateCapsulePage() {
   const navigate = useNavigate();
   const [title, setTitle] = useState("");
   const [message, setMessage] = useState("");
-  const [unlockDate, setUnlockDate] = useState("");
+  const [releaseDate, setReleaseDate] = useState("");
+  const [status, setStatus] = useState("locked"); // Default status is "locked"
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -44,8 +47,8 @@ function CreateCapsulePage() {
       await push(newCapsuleRef, {
         title,
         message,
-        unlockDate,
-        status: "saved", // Default status
+        releaseDate,
+        status, // Status is either "locked" or "unlocked"
         imageUrl, // Placeholder for image URL (to be updated after upload)
       });
 
@@ -60,8 +63,7 @@ function CreateCapsulePage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-tl from-blue-400 to-purple-700">
-
-      <div className="flex flex-col lg:flex-row bg-white rounded-xl shadow-2xl max-w-6xl w-full">
+      <div className="flex flex-col lg:flex-row bg-white rounded-xl shadow-2xl max-w-4xl w-full">
         {/* Left section - Create Time Capsul Image */}
         <div className="lg:w-1/2 w-full">
           <img
@@ -72,19 +74,27 @@ function CreateCapsulePage() {
         </div>
 
       {/* Right section - Form */}
-      <div className="bg-white rounded-xl shadow-2xl p-8 max-w-xl w-full">
+      <div className="w-full lg:w-1/2 p-8">
         <GradientHeading text="Create Time Capsule" />
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} 
+        className="space-y-6"
+        >
+          <div className="flex space-x-4">
+
+          </div>
           {/* Title Input */}
-          <TextInputField
-            label="Title"
-            type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            required
-          />
+          <div className="flex-1">
+            <TextInputField
+              label="Title"
+              type="text"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              required
+            />
+          </div>
+          
 
           {/* Message Input */}
           <TextInputField
@@ -95,16 +105,32 @@ function CreateCapsulePage() {
             required
           />
 
-          {/* Unlock Date Input */}
+          {/* Release Date Input */}
           <TextInputField
             label="Unlock Date"
             type="date"
-            value={unlockDate}
-            onChange={(e) => setUnlockDate(e.target.value)}
+            value={releaseDate}
+            onChange={(e) => setReleaseDate(e.target.value)}
             required
           />
 
-          {/* Image Upload (Optional) */}
+          {/* Status Input */}
+          <div>
+            <label className="block text-gray-800 font-semibold mb-2">
+              Status
+            </label>
+            <select
+              value={status}
+              onChange={(e) => setStatus(e.target.value)}
+              className="w-full p-2 border border-gray-300 rounded-lg"
+              required
+            >
+              <option value="locked">Locked</option>
+              <option value="unlocked">Unlocked</option>
+            </select>
+          </div>
+
+          {/* Image Upload */}
           <div>
             <label className="block text-gray-800 font-semibold mb-0.5 select-none">
               Upload Image (Optional)
