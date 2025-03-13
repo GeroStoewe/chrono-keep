@@ -3,6 +3,8 @@ import { ref, onValue } from "firebase/database";
 import { realtimeDb } from "../firebase.ts";
 import { CreateButton } from "../components/dashboardPage/CreateButton";
 import NavigationBar from "../components/dashboardPage/NavigationBar";
+import { FaEdit } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 /**
  * Dashboard Component
@@ -97,6 +99,13 @@ function DashboardPage() {
 
               {/* Capsule Details */}
               <div className="p-6">
+                {/* Edit Icon */}
+                <Link
+                  to={`/edit-capsule/${capsule.id}`} // Link to the edit page
+                  className="absolute top right-4 p-2 bg-purple-500 text-white rounded-full hover:bg-blue-600 transition-colors"
+                >
+                  <FaEdit className="w-4 h-4" />
+                </Link>
                 <h2 className="text-xl font-semibold mb-2">{capsule.title}</h2>
                 <p className="text-gray-600">Message: {capsule.message}</p>
                 <p className="text-gray-600 mb-2">Status: {capsule.status}</p>
