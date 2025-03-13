@@ -9,7 +9,7 @@ interface TimeCapsule {
   title: string;
   message: string;
   status: string;
-  unlockDate: string;
+  releaseDate: string;
   imageUrl?: string; // Optional field
 }
 
@@ -69,11 +69,9 @@ function ArchivePage() {
                   <h2 className="text-xl font-semibold mb-2">
                     {capsule.title}
                   </h2>
-                  <p className="text-gray-600">Message: {capsule.message}</p>
+                  <p className="text-gray-600 mb-2">Message: {capsule.message}</p>
                   <p className="text-gray-600 mb-2">Status: {capsule.status}</p>
-                  <p className="text-gray-600">
-                    Unlock Date: {capsule.unlockDate}
-                  </p>
+                  <p className="text-gray-600 mb-2">Release Date: {capsule.releaseDate}</p>
                 </div>
               </div>
             ))
