@@ -52,9 +52,10 @@ function CreateCapsulePage() {
       });
 
       // Show success snackbar notification
+      //TODO add x to manually dismiss the snackbar like you did in edit capsule page
       enqueueSnackbar("The capsule is saved successfully!", {
         variant: "success",
-        autoHideDuration: 3000, // Auto-hide after 3 seconds
+        autoHideDuration: 2000, // Auto-hide after 3 seconds
       });
 
       // Redirect to the dashboard after successful submission
@@ -66,7 +67,7 @@ function CreateCapsulePage() {
       // Show error snackbar notification
       enqueueSnackbar("Failed to save the capsule. Please try again.", {
         variant: "error",
-        autoHideDuration: 3000,
+        autoHideDuration: 2000,
       });
     } finally {
       setIsLoading(false);
