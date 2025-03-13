@@ -14,7 +14,13 @@ import NavigationBar from "../components/dashboardPage/NavigationBar";
 import GradientHeading from "../components/GradientHeading.tsx";
 import BackArrowButton from "../components/editCapsulePage/BackArrowButton.tsx";
 
-//TODO Add comments.
+/**
+ * EditCapsulePage Component
+ *
+ * This component provides a form for editing existing time capsules.
+ *
+ * @returns {JSX.Element} The form UI.
+ */
 
 function EditCapsulePage() {
   const { id } = useParams<{ id: string }>(); // Get the capsule ID from the URL
