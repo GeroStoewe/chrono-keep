@@ -52,9 +52,23 @@ function EditCapsulePage() {
         await uploadBytes(fileRef, imageFile);
         updatedImageUrl = await getDownloadURL(fileRef);
       }
-
+      
       // Update the capsule data in Firebase
       const dbRef = ref(realtimeDb, `timeCapsules/${id}`);
+      if (status === "unlocked") {
+        // Move to archive
+        const archiveRef = ref(realtimeDb, `archivedCapsules/${id}`);
+        await update(archiveRef, {
+          title,
+          message,
+          releaseDate,
+          status,
+          imageUrl: updatedImageUrl,
+        });
+
+    // Remove from active capsules
+    await remove(dbRef);
+    } else {
       await update(dbRef, {
         title,
         message,
@@ -62,11 +76,12 @@ function EditCapsulePage() {
         status,
         imageUrl: updatedImageUrl,
       });
+    }
 
       // Show success snackbar
       setSnackbar({ open: true, message: "Capsule updated successfully!" });
       setTimeout(() => {
-        navigate("/dashboard"); // Navigate back to dashboard after 2 seconds
+        navigate(status === "unlocked" ? "/archive" : "/dashboard"); // Navigate back to dashboard after 2 seconds
       }, 2000);
     } catch (error) {
       console.error("Error updating time capsule:", error);
