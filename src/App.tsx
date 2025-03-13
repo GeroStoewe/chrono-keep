@@ -11,6 +11,7 @@ import AboutPage from "./pages/AboutPage";
 import ArchivePage from "./pages/ArchivePage";
 import ProfilePage from "./pages/ProfilePage";
 import EditCapsulePage from "./pages/EditCapsulePage";
+import { SnackbarProvider } from "notistack";
 
 /**
  * The main application component that sets up routing and provides authentication context to the entire app.
@@ -24,7 +25,7 @@ import EditCapsulePage from "./pages/EditCapsulePage";
  */
 function App() {
   return (
-    <Router>
+    <><SnackbarProvider maxSnack={3}></SnackbarProvider><Router>
       <AuthProvider>
         <Routes>
           <Route path="/" element={<LandingPage />} />
@@ -39,7 +40,7 @@ function App() {
           <Route path="/edit-capsule/:id" element={<EditCapsulePage />} />
         </Routes>
       </AuthProvider>
-    </Router>
+    </Router></>
   );
 }
 

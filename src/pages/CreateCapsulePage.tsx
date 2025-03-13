@@ -6,6 +6,7 @@ import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "fire
 import GradientHeading from "../components/GradientHeading";
 import { TextInputField } from "../components/security/TextInputField";
 import { SubmitButton } from "../components/SubmitButton";
+import { enqueueSnackbar } from "notistack"; // Import useSnackbar
 
 //import NavigationBar from "../components/dashboardPage/NavigationBar";
 
@@ -52,10 +53,23 @@ function CreateCapsulePage() {
         imageUrl, // Placeholder for image URL (to be updated after upload)
       });
 
+      // Show success snackbar notification
+      enqueueSnackbar("The capsule is saved successfully!", {
+        variant: "success",
+        autoHideDuration: 3000, // Auto-hide after 3 seconds
+      });
+
       // Redirect to the dashboard after successful submission
+      setTimeout(() => {
       navigate("/dashboard");
+    }, 2000); // Wait for 2 seconds before navigating
     } catch (error) {
       console.error("Error saving time capsule:", error);
+      // Show error snackbar notification
+      enqueueSnackbar("Failed to save the capsule. Please try again.", {
+        variant: "error",
+        autoHideDuration: 3000,
+      });
     } finally {
       setIsLoading(false);
     }
