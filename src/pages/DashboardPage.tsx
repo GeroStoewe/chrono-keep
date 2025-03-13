@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
+import { FaEdit } from "react-icons/fa";
+import { Link } from "react-router-dom";
 import { ref, onValue } from "firebase/database";
 import { realtimeDb } from "../firebase.ts";
 import { CreateButton } from "../components/dashboardPage/CreateButton";
 import NavigationBar from "../components/dashboardPage/NavigationBar";
-import { FaEdit } from "react-icons/fa";
-import { Link } from "react-router-dom";
+
 
 /**
  * Dashboard Component
@@ -23,7 +24,7 @@ interface TimeCapsule {
   title: string;
   message: string; 
   status: string;
-  unlockDate: string;
+  releaseDate: string;
   imageUrl?: string; // Optional property for image placeholder
 }
 
@@ -107,10 +108,9 @@ function DashboardPage() {
                   <FaEdit className="w-4 h-4" />
                 </Link>
                 <h2 className="text-xl font-semibold mb-2">{capsule.title}</h2>
-                <p className="text-gray-600">Message: {capsule.message}</p>
+                <p className="text-gray-600 mb-2">Message: {capsule.message}</p>
                 <p className="text-gray-600 mb-2">Status: {capsule.status}</p>
-                <p className="text-gray-600">
-                  Unlock Date: {capsule.unlockDate}
+                <p className="text-gray-600 mb-2">Release Date: {capsule.releaseDate}
                 </p>
               </div>
             </div>
