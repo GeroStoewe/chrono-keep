@@ -8,6 +8,8 @@ import { SubmitButton } from "../components/SubmitButton";
 import NavigationBar from "../components/dashboardPage/NavigationBar";
 import GradientHeading from "../components/GradientHeading.tsx";
 
+//TODO Add comments.
+
 function EditCapsulePage() {
   const { id } = useParams<{ id: string }>(); // Get the capsule ID from the URL
   const navigate = useNavigate();

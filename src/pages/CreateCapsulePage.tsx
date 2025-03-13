@@ -8,8 +8,6 @@ import { TextInputField } from "../components/security/TextInputField";
 import { SubmitButton } from "../components/SubmitButton";
 import { enqueueSnackbar } from "notistack"; // Import useSnackbar
 
-//import NavigationBar from "../components/dashboardPage/NavigationBar";
-
 /**
  * CreateCapsulePage Component
  *
