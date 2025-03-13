@@ -12,6 +12,7 @@ import { TextInputField } from "../components/security/TextInputField";
 import { SubmitButton } from "../components/SubmitButton";
 import NavigationBar from "../components/dashboardPage/NavigationBar";
 import GradientHeading from "../components/GradientHeading.tsx";
+import BackArrowButton from "../components/editCapsulePage/BackArrowButton.tsx";
 
 //TODO Add comments.
 
@@ -131,6 +132,10 @@ function EditCapsulePage() {
         {/* Form Wrapper */}
         <div className="bg-white rounded-lg shadow-xl p-8">
           <GradientHeading text="Edit Time Capsule" />
+          {/* BackArrowButton */}
+          <div className="mb-4">
+            <BackArrowButton />
+          </div>
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-6">
