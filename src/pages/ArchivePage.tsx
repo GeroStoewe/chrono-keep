@@ -3,14 +3,26 @@ import { ref, onValue } from "firebase/database";
 import { realtimeDb } from "../firebase.ts";
 import NavigationBar from "../components/dashboardPage/NavigationBar";
 
-// Define an interface for a time capsule object
+/**
+ * ArchivePage Component
+ *
+ * This component displays all archived (unlocked) time capsules.
+ * It includes:
+ * - A navigation bar for easy navigation.
+ * - Fetching data from Firebase Realtime Database.
+ * - Displaying archived capsules in a responsive grid layout.
+ *
+ * @returns {JSX.Element} The Archive Page UI.
+ */
+
+// Interface definition for a time capsule object
 interface TimeCapsule {
   id: string;
   title: string;
   message: string;
   status: string;
   releaseDate: string;
-  imageUrl?: string; // Optional field
+  imageUrl?: string; 
 }
 
 function ArchivePage() {
@@ -89,4 +101,3 @@ function ArchivePage() {
 }
 
 export default ArchivePage;
-//TODO unlock date is missing on the archive page.
