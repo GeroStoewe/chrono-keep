@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ref, push } from "firebase/database";
 import { realtimeDb } from "../firebase.ts";
@@ -30,6 +30,14 @@ function CreateCapsulePage() {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
+  // Automatically set the release date when the status is set to "unlocked"
+  useEffect(() => {
+    if (status === "unlocked") {
+      const today = new Date().toISOString().split("T")[0]; // Get today's date in YYYY-MM-DD format
+      setReleaseDate(today); // Automatically set release date to today's date
+    }
+  }, [status]); // This effect runs when the status changes
+
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -47,7 +55,10 @@ function CreateCapsulePage() {
       }
 
       // Save the time capsule data to Firebase Realtime Database
-      const newCapsuleRef = ref(realtimeDb, "timeCapsules");
+      const newCapsuleRef = ref(
+        realtimeDb,
+        status === "unlocked" ? "archivedCapsules" : "timeCapsules"
+      );
       await push(newCapsuleRef, {
         title,
         message,
@@ -63,9 +74,13 @@ function CreateCapsulePage() {
         autoHideDuration: 2000 // Auto-hide after 3 seconds
       });
 
-      // Redirect to the dashboard after successful submission
+      // Redirect to the dashboard if status is locked after successful submission
       setTimeout(() => {
-        navigate("/dashboard");
+        if (status === "locked") {
+          navigate("/dashboard");
+        } else {
+          navigate("/archive"); // Redirect to archive if status is "unlocked"
+        }
       }, 2000); // Wait for 2 seconds before navigating
     } catch (error) {
       console.error("Error saving time capsule:", error);
@@ -135,7 +150,16 @@ function CreateCapsulePage() {
               <div className="relative">
                 <select
                   value={status}
-                  onChange={(e) => setStatus(e.target.value)}
+                  onChange={(e) => {
+                    const newStatus = e.target.value;
+                    setStatus(newStatus);
+
+                    // If the status is set to "unlocked" and there's no release date, set it to today
+                    if (newStatus === "unlocked" && !releaseDate) {
+                      const today = new Date().toISOString().split("T")[0]; // Format YYYY-MM-DD
+                      setReleaseDate(today);
+                    }
+                  }}
                   className="w-full px-4 py-3 pr-100 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-transparent transition duration-300 transform hover:scale-105 focus:gradient-border appearance-none"
                   required
                 >
@@ -144,7 +168,7 @@ function CreateCapsulePage() {
                 </select>
                 {/* Custom Arrow (SVG) */}
                 <div className="absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none">
-                  ▼ {/* You can replace this with an actual SVG icon */}
+                  ▼
                 </div>
               </div>
             </div>
