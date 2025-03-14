@@ -14,7 +14,7 @@ import NavigationBar from "../components/dashboardPage/NavigationBar";
 import GradientHeading from "../components/GradientHeading.tsx";
 import BackArrowButton from "../components/editCapsulePage/BackArrowButton.tsx";
 
-//TODO use snackbar 
+//TODO use snackbar
 /**
  * EditCapsulePage Component
  *
