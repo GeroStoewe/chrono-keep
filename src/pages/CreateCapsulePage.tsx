@@ -12,6 +12,7 @@ import GradientHeading from "../components/GradientHeading";
 import { TextInputField } from "../components/security/TextInputField";
 import { SubmitButton } from "../components/SubmitButton";
 import { enqueueSnackbar } from "notistack"; // Import useSnackbar
+import { getAuth } from "firebase/auth";
 
 /**
  * CreateCapsulePage Component
@@ -22,6 +23,10 @@ import { enqueueSnackbar } from "notistack"; // Import useSnackbar
  */
 
 function CreateCapsulePage() {
+  const auth = getAuth();
+  const user = auth.currentUser; // Get the current user
+  const userId = user?.uid; // Get the user ID
+
   const navigate = useNavigate();
   const [title, setTitle] = useState("");
   const [message, setMessage] = useState("");
@@ -54,17 +59,19 @@ function CreateCapsulePage() {
         imageUrl = await getDownloadURL(fileRef); // Get the download URL
       }
 
+      // Determine the database path based on the status
+      const databasePath =
+        status === "unlocked" ? "archivedCapsules" : "timeCapsules";
+
       // Save the time capsule data to Firebase Realtime Database
-      const newCapsuleRef = ref(
-        realtimeDb,
-        status === "unlocked" ? "archivedCapsules" : "timeCapsules"
-      );
+      const newCapsuleRef = ref(realtimeDb, databasePath);
       await push(newCapsuleRef, {
         title,
         message,
         releaseDate,
-        status, // Status is either "locked" or "unlocked"
-        imageUrl // Placeholder for image URL (to be updated after upload)
+        status,
+        imageUrl,
+        user_id: userId // Add the user_id field
       });
 
       // Show success snackbar notification
