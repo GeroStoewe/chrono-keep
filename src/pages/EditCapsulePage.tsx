@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { ref, onValue, update, remove } from "firebase/database";
+import { getAuth } from "firebase/auth";
 import { realtimeDb } from "../firebase.ts";
 import {
   getStorage,
@@ -24,6 +25,10 @@ import BackArrowButton from "../components/editCapsulePage/BackArrowButton.tsx";
  */
 
 function EditCapsulePage() {
+  const auth = getAuth();
+  const user = auth.currentUser;
+  const userId = user?.uid;
+
   const { id } = useParams<{ id: string }>(); // Get the capsule ID from the URL
   const navigate = useNavigate();
   const [title, setTitle] = useState("");
@@ -37,18 +42,20 @@ function EditCapsulePage() {
 
   // Fetch the capsule data based on the ID
   useEffect(() => {
-    const dbRef = ref(realtimeDb, `timeCapsules/${id}`);
-    onValue(dbRef, (snapshot) => {
-      const data = snapshot.val();
-      if (data) {
-        setTitle(data.title);
-        setMessage(data.message);
-        setReleaseDate(data.releaseDate);
-        setStatus(data.status);
-        setImageUrl(data.imageUrl || "");
-      }
-    });
-  }, [id]);
+    if (userId) {
+      const dbRef = ref(realtimeDb, `timeCapsules/${id}`);
+      onValue(dbRef, (snapshot) => {
+        const data = snapshot.val();
+        if (data && data.user_id === userId) {
+          setTitle(data.title);
+          setMessage(data.message);
+          setReleaseDate(data.releaseDate);
+          setStatus(data.status);
+          setImageUrl(data.imageUrl || "");
+        }
+      });
+    }
+  }, [userId, id]);
 
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
@@ -76,7 +83,8 @@ function EditCapsulePage() {
           message,
           releaseDate,
           status,
-          imageUrl: updatedImageUrl
+          imageUrl: updatedImageUrl,
+          user_id: userId
         });
 
         // Remove from active capsules
@@ -87,7 +95,8 @@ function EditCapsulePage() {
           message,
           releaseDate,
           status,
-          imageUrl: updatedImageUrl
+          imageUrl: updatedImageUrl,
+          user_id: userId
         });
       }
 

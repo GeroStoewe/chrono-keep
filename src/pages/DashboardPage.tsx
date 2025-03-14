@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { FaEdit } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { ref, onValue } from "firebase/database";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getAuth } from "firebase/auth";
 import { realtimeDb } from "../firebase.ts";
 import { CreateButton } from "../components/dashboardPage/CreateButton";
 import NavigationBar from "../components/dashboardPage/NavigationBar";
@@ -25,15 +25,38 @@ interface TimeCapsule {
   message: string;
   status: string;
   releaseDate: string;
-  imageUrl?: string; 
+  imageUrl?: string;
 }
 
 function DashboardPage() {
+  const auth = getAuth();
+  const user = auth.currentUser;
+  const userId = user?.uid;
+
   const [capsules, setCapsules] = useState<TimeCapsule[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  // const [loading, setLoading] = useState(true);
+  // const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (userId) {
+      const dbRef = ref(realtimeDb, "timeCapsules");
+      onValue(dbRef, (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+          // Filter capsules by user_id
+          const capsulesArray = Object.keys(data)
+            .filter((key) => data[key].user_id === userId)
+            .map((key) => ({
+              id: key,
+              ...data[key]
+            }));
+          setCapsules(capsulesArray);
+        }
+      });
+    }
+  }, [userId]);
+
+  /*
     const auth = getAuth();
 
     // Listen for authentication state changes
@@ -81,7 +104,7 @@ function DashboardPage() {
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
-
+*/
   return (
     <div className="min-h-screen bg-gradient-to-tl from-blue-400 to-purple-700">
       {/* Navigation Bar */}

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { ref, onValue } from "firebase/database";
+import { getAuth } from "firebase/auth";
 import { realtimeDb } from "../firebase.ts";
 import NavigationBar from "../components/dashboardPage/NavigationBar";
 
@@ -22,32 +23,38 @@ interface TimeCapsule {
   message: string;
   status: string;
   releaseDate: string;
-  imageUrl?: string; 
+  imageUrl?: string;
 }
 
 function ArchivePage() {
+  const auth = getAuth();
+  const user = auth.currentUser;
+  const userId = user?.uid;
+
   const [capsules, setCapsules] = useState<TimeCapsule[]>([]);
 
   useEffect(() => {
-    // Reference to the archived capsules node
-    const dbRef = ref(realtimeDb, "archivedCapsules");
-    // Listen for changes and update the state
-    onValue(dbRef, (snapshot) => {
-      const data = snapshot.val();
-      if (data && typeof data === "object") {
-        // Convert the returned object to an array of capsules
-        const capsulesArray: TimeCapsule[] = Object.entries(data).map(
-          ([id, capsuleData]) => ({
-            id,
-            ...(capsuleData as Omit<TimeCapsule, "id">)
-          })
-        );
-        setCapsules(capsulesArray);
-      } else {
-        setCapsules([]);
-      }
-    });
-  }, []);
+    if (userId) {
+      // Reference to the archived capsules node
+      const dbRef = ref(realtimeDb, "archivedCapsules");
+      // Listen for changes and update the state
+      onValue(dbRef, (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+          // Convert the returned object to an array of capsules
+          const capsulesArray = Object.keys(data)
+            .filter((key) => data[key].user_id === userId)
+            .map((key) => ({
+              id: key,
+              ...data[key]
+            }));
+          setCapsules(capsulesArray);
+        } else {
+          setCapsules([]);
+        }
+      });
+    }
+  }, [userId]);
 
   return (
     <div className="min-h-screen bg-gradient-to-tl from-blue-400 to-purple-700">
