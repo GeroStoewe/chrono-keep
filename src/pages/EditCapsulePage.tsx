@@ -173,7 +173,6 @@ function EditCapsulePage() {
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              required
             />
 
             {/* Message Input */}
@@ -182,7 +181,6 @@ function EditCapsulePage() {
               type="text"
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              required
             />
 
             {/* Release Date Input */}
@@ -191,7 +189,6 @@ function EditCapsulePage() {
               type="date"
               value={releaseDate}
               onChange={(e) => setReleaseDate(e.target.value)}
-              required
             />
 
             {/* Status Input */}
