@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { FaEdit } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { ref, onValue } from "firebase/database";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { realtimeDb } from "../firebase.ts";
 import { CreateButton } from "../components/dashboardPage/CreateButton";
 import NavigationBar from "../components/dashboardPage/NavigationBar";
@@ -11,8 +12,8 @@ import NavigationBar from "../components/dashboardPage/NavigationBar";
  *
  * This component provides a user-friendly dashboard with:
  * - Navigation bar.
- * - Create Time Capsule button.
- * - Display of all time capsules.
+ * - Create Button for adding a new time capsule.
+ * - Display only the logged-in user's locked capsules with an edit button.
  *
  * @returns {JSX.Element} The dashboard UI.
  */
@@ -24,7 +25,7 @@ interface TimeCapsule {
   message: string;
   status: string;
   releaseDate: string;
-  imageUrl?: string; // Optional property for image placeholder
+  imageUrl?: string; 
 }
 
 function DashboardPage() {
@@ -32,12 +33,18 @@ function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Fetch time capsules from Firebase Realtime Database
   useEffect(() => {
-    const dbRef = ref(realtimeDb, "timeCapsules");
-    onValue(
-      dbRef,
-      (snapshot) => {
+    const auth = getAuth();
+
+    // Listen for authentication state changes
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const userId = user.uid;
+        const dbRef = ref(realtimeDb, `timeCapsules/${userId}`); // Query only the user's capsules
+    
+        onValue(
+          dbRef,
+          (snapshot) => {
         const data = snapshot.val();
         console.log("Data from Firebase:", data); // Debugging log
         if (data) {
@@ -50,8 +57,9 @@ function DashboardPage() {
           );
           setCapsules(capsulesArray);
         } else {
-          console.log("No data found in Firebase."); // Debugging log
-          setError("No time capsules found.");
+          setCapsules([]); // No capsules found
+          console.log("No time capsules found in Firebase."); // Debugging log
+          setError(null);
         }
         setLoading(false);
       },
@@ -61,6 +69,14 @@ function DashboardPage() {
         setLoading(false);
       }
     );
+  }else {
+    console.log("No user logged in.");
+    setError("User not authenticated.");
+    setLoading(false);
+  }
+  });
+
+  return () => unsubscribe(); // Cleanup listener on unmount
   }, []);
 
   if (loading) return <p>Loading...</p>;
