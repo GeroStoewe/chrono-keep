@@ -127,7 +127,6 @@ function CreateCapsulePage() {
                 type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                required
               />
             </div>
 
@@ -137,7 +136,6 @@ function CreateCapsulePage() {
               type="text"
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              required
             />
 
             {/* Release Date Input */}
@@ -146,7 +144,6 @@ function CreateCapsulePage() {
               type="date"
               value={releaseDate}
               onChange={(e) => setReleaseDate(e.target.value)}
-              required
             />
 
             {/* Status Input */}
