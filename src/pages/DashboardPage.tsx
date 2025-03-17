@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { FaEdit } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import { ref, onValue } from "firebase/database";
+import { ref, onValue, get, set, remove } from "firebase/database";
 import { getAuth } from "firebase/auth";
 import { realtimeDb } from "../firebase.ts";
 import { CreateButton } from "../components/dashboardPage/CreateButton";
+import { UnlockButton } from "../components/dashboardPage/UnlockButton";
 import NavigationBar from "../components/dashboardPage/NavigationBar";
 
 /**
@@ -26,6 +27,7 @@ interface TimeCapsule {
   status: string;
   releaseDate: string;
   imageUrl?: string;
+  userId?: string;
 }
 
 function DashboardPage() {
@@ -45,10 +47,10 @@ function DashboardPage() {
         if (data) {
           // Filter capsules by user_id
           const capsulesArray = Object.keys(data)
-            .filter((key) => data[key].user_id === userId)
+            .filter((key) => data[key].user_id === userId && data[key].status === "locked")
             .map((key) => ({
               id: key,
-              ...data[key]
+              ...data[key] 
             }));
           setCapsules(capsulesArray);
         }
@@ -56,55 +58,51 @@ function DashboardPage() {
     }
   }, [userId]);
 
-  /*
-    const auth = getAuth();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const checkAndUnlockCapsules = async () => {
+    const now = new Date();
+    console.log("Current Date in unlock function:", now); // Debugging log
+    for (const capsule of capsules) {
+      console.log("Checking capsule:", capsule.title, "ID:", capsule.id, "Release Date:", capsule.releaseDate, "Status:", capsule.status); // Debugging log
+      if (capsule.status === "locked") {
+        const releaseDate = new Date(capsule.releaseDate);
+        console.log("Parsed Release Date:", releaseDate); // Debugging log
+        console.log("Comparison:", releaseDate.getTime() <= now.getTime()); // Debugging log
+        if (releaseDate <= now) {
+          const capsuleRef = ref(realtimeDb, `timeCapsules/${capsule.id}`);
+          const archivedCapsuleRef = ref(realtimeDb, `archivedCapsules/${userId}/${capsule.id}`);
 
-    // Listen for authentication state changes
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        const userId = user.uid;
-        const dbRef = ref(realtimeDb, `timeCapsules/${userId}`); // Query only the user's capsules
-    
-        onValue(
-          dbRef,
-          (snapshot) => {
-        const data = snapshot.val();
-        console.log("Data from Firebase:", data); // Debugging log
-        if (data) {
-          // Convert the object of capsules into an array
-          const capsulesArray: TimeCapsule[] = Object.entries(data).map(
-            ([id, capsule]) => ({
-              id,
-              ...(capsule as TimeCapsule) // Spread the capsule data
-            })
-          );
-          setCapsules(capsulesArray);
+          try {
+            const snapshot = await get(capsuleRef);
+            const capsuleData = snapshot.val();
+
+            if (capsuleData) {
+              await set(archivedCapsuleRef, { ...capsuleData, status: "unlocked" });
+              await remove(capsuleRef);
+              console.log(`Time capsule "${capsule.title}" (ID: ${capsule.id}) unlocked and moved to archive.`); // Debugging log
+              setCapsules((prevCapsules) =>
+                prevCapsules.filter((c) => c.id !== capsule.id)
+              );
+            } else {
+              console.warn(`Could not retrieve data for capsule with ID: ${capsule.id}`); // Debugging log
+            }
+          } catch (error) {
+            console.error("Error unlocking and archiving time capsule:", error); // Debugging log
+          }
         } else {
-          setCapsules([]); // No capsules found
-          console.log("No time capsules found in Firebase."); // Debugging log
-          setError(null);
+          console.log(`Capsule "${capsule.title}" (ID: ${capsule.id}) release date is in the future.`); // Debugging log
         }
-        setLoading(false);
-      },
-      (error) => {
-        console.error("Error fetching data:", error); // Debugging log
-        setError("Failed to fetch data.");
-        setLoading(false);
+      } else {
+        console.log(`Capsule "${capsule.title}" (ID: ${capsule.id}) is not locked.`); // Debugging log
       }
-    );
-  }else {
-    console.log("No user logged in.");
-    setError("User not authenticated.");
-    setLoading(false);
-  }
-  });
+    }
+  };
 
-  return () => unsubscribe(); // Cleanup listener on unmount
-  }, []);
+  useEffect(() => {
+    const intervalId = setInterval(checkAndUnlockCapsules, 60 * 60 * 1000); // Check every hour (adjust as needed)
+    return () => clearInterval(intervalId);
+  }, [capsules, checkAndUnlockCapsules, userId]);
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>{error}</p>;
-*/
   return (
     <div className="min-h-screen bg-gradient-to-tl from-blue-400 to-purple-700">
       {/* Navigation Bar */}
@@ -156,11 +154,23 @@ function DashboardPage() {
           ))}
         </div>
       </div>
+    <div className="fixed bottom-10 right-8 flex flex-col gap-4">
+      <button
+        onClick={checkAndUnlockCapsules}
+        className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors"
+      >
+      </button>
+      <div className="fixed bottom-30 right-8 flex flex-col gap-4">
+      <UnlockButton
+            onClick={checkAndUnlockCapsules}
+            isLoading={false} text={"Unlock"} />
+        </div>
+      </div>
       {/* Create Time Capsule Button (Fixed at Bottom-Right Corner) */}
       <div className="fixed bottom-8 right-8">
         <CreateButton to="/create-capsule" text="Create Time Capsule" />
       </div>
-    </div>
+      </div>
   );
 }
 
