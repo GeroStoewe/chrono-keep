@@ -108,3 +108,5 @@ function ArchivePage() {
 }
 
 export default ArchivePage;
+
+//TODO: unlock button only updates the backend on firebase but does not render the updated timecapsules.
