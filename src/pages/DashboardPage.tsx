@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { FaEdit } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { ref, onValue, get, set, remove } from "firebase/database";
@@ -27,7 +27,6 @@ interface TimeCapsule {
   status: string;
   releaseDate: string;
   imageUrl?: string;
-  userId?: string;
 }
 
 function DashboardPage() {
@@ -58,8 +57,7 @@ function DashboardPage() {
     }
   }, [userId]);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const checkAndUnlockCapsules = async () => {
+  const checkAndUnlockCapsules = useCallback(async () => {
     const now = new Date();
     console.log("Current Date in unlock function:", now); // Debugging log
     for (const capsule of capsules) {
@@ -96,12 +94,12 @@ function DashboardPage() {
         console.log(`Capsule "${capsule.title}" (ID: ${capsule.id}) is not locked.`); // Debugging log
       }
     }
-  };
+  }, [capsules, userId]);
 
   useEffect(() => {
     const intervalId = setInterval(checkAndUnlockCapsules, 60 * 60 * 1000); // Check every hour (adjust as needed)
     return () => clearInterval(intervalId);
-  }, [capsules, checkAndUnlockCapsules, userId]);
+  }, [checkAndUnlockCapsules]);
 
   return (
     <div className="min-h-screen bg-gradient-to-tl from-blue-400 to-purple-700">
@@ -153,17 +151,12 @@ function DashboardPage() {
             </div>
           ))}
         </div>
-      </div>
-    <div className="fixed bottom-10 right-8 flex flex-col gap-4">
-      <button
-        onClick={checkAndUnlockCapsules}
-        className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors"
-      >
-      </button>
       <div className="fixed bottom-30 right-8 flex flex-col gap-4">
       <UnlockButton
             onClick={checkAndUnlockCapsules}
-            isLoading={false} text={"Unlock"} />
+            isLoading={false} 
+            text={"Unlock"} 
+            to={""} />
         </div>
       </div>
       {/* Create Time Capsule Button (Fixed at Bottom-Right Corner) */}

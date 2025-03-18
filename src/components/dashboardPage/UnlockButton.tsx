@@ -5,10 +5,12 @@ export function UnlockButton({
   text,
   onClick,
   isLoading = false,
+  to,
 }: {
   text: string;
   onClick: () => void;
   isLoading?: boolean;
+  to: string;
 }) {
  
   // Handle button click
@@ -34,6 +36,7 @@ export function UnlockButton({
   // Handle button click with navigation delay
   const handleClick = () => {
     setIsExpanded(true); // Expand immediately
+    onClick();
     setTimeout(() => {
       navigate(to); // Navigate after delay
     }, 500); // Delay navigation by 500ms
@@ -92,5 +95,3 @@ export function UnlockButton({
     </button>
   );
 }
-
-//TODO edit button
