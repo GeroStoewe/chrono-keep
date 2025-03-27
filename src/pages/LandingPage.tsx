@@ -76,7 +76,10 @@ const LandingPage: React.FC = () => {
     <div className="flex flex-col min-h-screen bg-white overflow-hidden">
       {/* Hero Section with Parallax Video */}
       <section className="relative flex items-center justify-center min-h-screen text-center px-4 overflow-hidden">
-        <VideoBackground videoSrc="src/assets/1.mp4" scrollY={scrollY} />
+        <VideoBackground
+          videoSrc="src/assets/landingPageBackgroundVideo.mp4"
+          scrollY={scrollY}
+        />
         <div className="absolute top-0 left-0 w-full h-full bg-black opacity-40"></div>
         <div className="relative z-10">
           {/* Hero Text and Buttons */}
