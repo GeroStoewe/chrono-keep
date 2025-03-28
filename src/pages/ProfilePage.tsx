@@ -12,7 +12,7 @@ import ProfileGoogleMessage from "../components/profilePage/ProfileGoogleMessage
 import { ProfileTextInputField } from "../components/profilePage/ProfileTextInputField";
 import { ProfilePasswordInputField } from "../components/profilePage/ProfilePasswordInputField";
 import { ProfileSubmitButton } from "../components/profilePage/ProfileSubmitButton";
-import { ProfileDeleteAccountPasswordInputField } from "../components/profilePage/ProfileDeleteAccountPassowordInputField";
+import { ProfileDeleteAccountPasswordInputField } from "../components/profilePage/ProfileDeleteAccountPasswordInputField";
 import LogoutButton from "../components/profilePage/LogoutButton";
 import DeleteAccountButton from "../components/profilePage/DeleteAccountButton";
 
@@ -241,7 +241,9 @@ const ProfilePage: React.FC = () => {
       <NavigationBar />
 
       <div className="max-w-6xl mx-auto p-8 relative">
-        <h1 className="text-4xl font-bold text-white mb-6">Profile</h1>
+        <h1 className="text-4xl font-bold text-white mb-6 select-none">
+          Profile
+        </h1>
 
         <div className="bg-white rounded-xl shadow-2xl p-8 relative">
           <ProfileHeader
