@@ -36,15 +36,14 @@ function ArchivePage() {
   useEffect(() => {
     if (userId) {
       // Reference to the archived capsules node
-      const dbRef = ref(realtimeDb, "archivedCapsules");
+      const dbRef = ref(realtimeDb, `archivedCapsules/${userId}`);
       // Listen for changes and update the state
-      onValue(dbRef, (snapshot) => {
+      const unsubscribe = onValue(dbRef, (snapshot) => {
+        console.log("Firebase data updated:", snapshot.val());
         const data = snapshot.val();
         if (data) {
           // Convert the returned object to an array of capsules
-          const capsulesArray = Object.keys(data)
-            .filter((key) => data[key].user_id === userId)
-            .map((key) => ({
+          const capsulesArray = Object.keys(data).map((key) => ({
               id: key,
               ...data[key]
             }));
@@ -53,6 +52,7 @@ function ArchivePage() {
           setCapsules([]);
         }
       });
+      return () => unsubscribe();
     }
   }, [userId]);
 
@@ -108,5 +108,3 @@ function ArchivePage() {
 }
 
 export default ArchivePage;
-
-//TODO: unlock button only updates the backend on firebase but does not render the updated timecapsules.
