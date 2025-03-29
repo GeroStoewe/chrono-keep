@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ref, push } from "firebase/database";
-import { realtimeDb } from "../firebase.ts";
 import {
   getStorage,
   ref as storageRef,
@@ -11,7 +9,7 @@ import {
 import GradientHeading from "../components/GradientHeading";
 import { TextInputField } from "../components/security/TextInputField";
 import { SubmitButton } from "../components/SubmitButton";
-import { closeSnackbar, enqueueSnackbar } from "notistack"; // Import useSnackbar
+import { enqueueSnackbar, closeSnackbar } from "notistack"; // Import useSnackbar
 import { getAuth } from "firebase/auth";
 
 /**
@@ -59,40 +57,47 @@ function CreateCapsulePage() {
         imageUrl = await getDownloadURL(fileRef); // Get the download URL
       }
 
-      // Determine the database path based on the status
-      const databasePath =
-        status === "unlocked" ? "archivedCapsules" : "timeCapsules";
+      const response = await fetch(
+        "https://createcapsule-6udqjh4w5q-uc.a.run.app",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            title,
+            message,
+            releaseDate,
+            status,
+            imageUrl,
+            user_id: userId
+          })
+        }
+      );
 
-      // Save the time capsule data to Firebase Realtime Database
-      const newCapsuleRef = ref(realtimeDb, databasePath);
-      await push(newCapsuleRef, {
-        title,
-        message,
-        releaseDate,
-        status,
-        imageUrl,
-        user_id: userId // Add the user_id field
-      });
+      if (!response.ok) {
+        throw new Error("Failed to save the capsule");
+      }
 
-      // Show success snackbar notification
+      const data = await response.json();
+      console.log("Capsule saved:", data);
+
       enqueueSnackbar("The capsule is saved successfully!", {
         variant: "success",
         autoHideDuration: 2000, // Auto-hide after 3 seconds
         action: (key) => (
-          <button onClick={() => closeSnackbar(key)} className="text-white px-2">
+          <button
+            onClick={() => closeSnackbar(key)}
+            className="text-white px-2"
+          >
             ✖
           </button>
-        ),
+        )
       });
 
-      // Redirect to the dashboard if status is locked after successful submission
       setTimeout(() => {
-        if (status === "locked") {
-          navigate("/dashboard");
-        } else {
-          navigate("/archive"); // Redirect to archive if status is "unlocked"
-        }
-      }, 2000); // Wait for 2 seconds before navigating
+        navigate(status === "locked" ? "/dashboard" : "/archive");
+      }, 2000);
     } catch (error) {
       console.error("Error saving time capsule:", error);
       // Show error snackbar notification
