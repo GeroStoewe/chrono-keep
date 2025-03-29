@@ -11,7 +11,7 @@ import {
 import GradientHeading from "../components/GradientHeading";
 import { TextInputField } from "../components/security/TextInputField";
 import { SubmitButton } from "../components/SubmitButton";
-import { enqueueSnackbar } from "notistack"; // Import useSnackbar
+import { closeSnackbar, enqueueSnackbar } from "notistack"; // Import useSnackbar
 import { getAuth } from "firebase/auth";
 
 /**
@@ -78,7 +78,12 @@ function CreateCapsulePage() {
       //TODO add x to manually dismiss the snackbar like you did in edit capsule page
       enqueueSnackbar("The capsule is saved successfully!", {
         variant: "success",
-        autoHideDuration: 2000 // Auto-hide after 3 seconds
+        autoHideDuration: 2000, // Auto-hide after 3 seconds
+        action: (key) => (
+          <button onClick={() => closeSnackbar(key)} className="text-white">
+            ✖
+          </button>
+        ),
       });
 
       // Redirect to the dashboard if status is locked after successful submission
@@ -99,6 +104,11 @@ function CreateCapsulePage() {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setStatus(e.target.value);
+    console.log("Selected Status:", e.target.value); // Debugging
   };
 
   return (
@@ -153,19 +163,11 @@ function CreateCapsulePage() {
               </label>
               <div className="relative">
                 <select
+                  id="status"
+                  name="status"
                   value={status}
-                  onChange={(e) => {
-                    const newStatus = e.target.value;
-                    setStatus(newStatus);
-
-                    // If the status is set to "unlocked" and there's no release date, set it to today
-                    if (newStatus === "unlocked" && !releaseDate) {
-                      const today = new Date().toISOString().split("T")[0]; // Format YYYY-MM-DD
-                      setReleaseDate(today);
-                    }
-                  }}
-                  className="w-full px-4 py-3 pr-100 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-transparent transition duration-300 transform hover:scale-105 focus:gradient-border appearance-none"
-                  required
+                  onChange={handleStatusChange}
+                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-transparent transition duration-300 transform hover:scale-105 focus:gradient-border appearance-none"
                 >
                   <option value="locked">Locked</option>
                   <option value="unlocked">Unlocked</option>
