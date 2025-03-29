@@ -25,6 +25,13 @@ const VisionSection: React.FC = () => {
         <strong> messages and images</strong> and <strong>setting</strong> a
         future date.
       </p>
+      <p className="text-lg text-gray-700 mb-12 select-none">
+        <span className="font-semibold text-purple-700">
+          If you love preserving your memories,{" "}
+        </span>
+        then <strong>Chrono Keep</strong> is the perfect place for{" "}
+        <strong>you</strong>.
+      </p>
     </div>
   );
 };
