@@ -243,7 +243,7 @@ function EditCapsulePage() {
               />
               <label
                 htmlFor="file-upload"
-                className="cursor-pointer bg-blue-500 text-white px-4 py-2 rounded-lg"
+                className="cursor-pointer bg-blue-500 text-white px-4 py-2 rounded-lg mt-2 inline-block"
               >
                 Choose File
               </label>
@@ -257,7 +257,7 @@ function EditCapsulePage() {
             </div>
 
             {/* Submit Button */}
-            <div className="mt-6">
+            <div className="mt-4">
               <SubmitButton text="Update Capsule" isLoading={isLoading} />
             </div>
 
