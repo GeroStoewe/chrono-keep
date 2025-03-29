@@ -75,12 +75,11 @@ function CreateCapsulePage() {
       });
 
       // Show success snackbar notification
-      //TODO add x to manually dismiss the snackbar like you did in edit capsule page
       enqueueSnackbar("The capsule is saved successfully!", {
         variant: "success",
         autoHideDuration: 2000, // Auto-hide after 3 seconds
         action: (key) => (
-          <button onClick={() => closeSnackbar(key)} className="text-white">
+          <button onClick={() => closeSnackbar(key)} className="text-white px-2">
             ✖
           </button>
         ),

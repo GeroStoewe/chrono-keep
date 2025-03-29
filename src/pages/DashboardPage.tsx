@@ -35,8 +35,6 @@ function DashboardPage() {
   const userId = user?.uid;
 
   const [capsules, setCapsules] = useState<TimeCapsule[]>([]);
-  // const [loading, setLoading] = useState(true);
-  // const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (userId) {
