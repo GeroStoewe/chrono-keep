@@ -7,6 +7,7 @@ import { User } from "firebase/auth";
  *
  * @interface AuthContextProps
  * @property {User | null} user - The current authenticated user or null if not logged in.
+ * @property {string | null} token - The authentication token used for API requests.
  * @property {Function} login - The function to login a user who already has an account, with email and password.
  * @property {Function} signup - The function to register a new user with email, password, and full name.
  * @property {Function} googleLogin - The function to log in a user using Google authentication.
@@ -19,6 +20,7 @@ import { User } from "firebase/auth";
  */
 interface AuthContextProps {
   user: User | null;
+  token: string | null;
   login: (email: string, password: string) => Promise<void>;
   signup: (
     email: string,

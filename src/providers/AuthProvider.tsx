@@ -33,6 +33,7 @@ import "react-toastify/dist/ReactToastify.css";
  */
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [token, setToken] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
@@ -47,8 +48,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       if (currentUser) {
         await currentUser.reload();
         setUser(auth.currentUser);
+        const token = await currentUser.getIdToken();
+        setToken(token);
       } else {
         setUser(null);
+        setToken(null);
       }
     });
 
@@ -324,6 +328,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       <AuthContext.Provider
         value={{
           user,
+          token,
           login,
           signup,
           googleLogin,

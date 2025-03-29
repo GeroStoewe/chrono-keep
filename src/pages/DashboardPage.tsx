@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
+import { useAuth } from "../hooks/UseAuth";
 import { FaEdit } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import { ref, onValue } from "firebase/database";
-import { getAuth } from "firebase/auth";
-import { realtimeDb } from "../firebase.ts";
+import axios from "axios";
 import { CreateButton } from "../components/dashboardPage/CreateButton";
 import NavigationBar from "../components/dashboardPage/NavigationBar";
 
@@ -29,82 +28,45 @@ interface TimeCapsule {
 }
 
 function DashboardPage() {
-  const auth = getAuth();
-  const user = auth.currentUser;
-  const userId = user?.uid;
-
+  const { user } = useAuth();
   const [capsules, setCapsules] = useState<TimeCapsule[]>([]);
-  // const [loading, setLoading] = useState(true);
-  // const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
+  // Fetch time capsules from the backend
   useEffect(() => {
-    if (userId) {
-      const dbRef = ref(realtimeDb, "timeCapsules");
-      onValue(dbRef, (snapshot) => {
-        const data = snapshot.val();
-        if (data) {
-          // Filter capsules by user_id
-          const capsulesArray = Object.keys(data)
-            .filter((key) => data[key].user_id === userId)
-            .map((key) => ({
-              id: key,
-              ...data[key]
-            }));
-          setCapsules(capsulesArray);
-        }
-      });
-    }
-  }, [userId]);
+    const fetchCapsules = async () => {
+      try {
+        const response = await axios.get(`/api/timecapsules/user/${user?.uid}`);
 
-  /*
-    const auth = getAuth();
-
-    // Listen for authentication state changes
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        const userId = user.uid;
-        const dbRef = ref(realtimeDb, `timeCapsules/${userId}`); // Query only the user's capsules
-    
-        onValue(
-          dbRef,
-          (snapshot) => {
-        const data = snapshot.val();
-        console.log("Data from Firebase:", data); // Debugging log
-        if (data) {
-          // Convert the object of capsules into an array
-          const capsulesArray: TimeCapsule[] = Object.entries(data).map(
-            ([id, capsule]) => ({
-              id,
-              ...(capsule as TimeCapsule) // Spread the capsule data
-            })
-          );
-          setCapsules(capsulesArray);
-        } else {
-          setCapsules([]); // No capsules found
-          console.log("No time capsules found in Firebase."); // Debugging log
-          setError(null);
-        }
-        setLoading(false);
-      },
-      (error) => {
-        console.error("Error fetching data:", error); // Debugging log
-        setError("Failed to fetch data.");
+        // Ensure the response is an array before setting the state
+        const data = Array.isArray(response.data) ? response.data : [];
+        setCapsules(data);
+      } catch (err) {
+        console.error("Error fetching capsules:", err);
+        setError("Failed to load time capsules.");
+      } finally {
         setLoading(false);
       }
-    );
-  }else {
-    console.log("No user logged in.");
-    setError("User not authenticated.");
-    setLoading(false);
-  }
-  });
+    };
 
-  return () => unsubscribe(); // Cleanup listener on unmount
-  }, []);
+    fetchCapsules();
+  }, [user?.uid]);
+
+  // Handle deleting a time capsule
+  const handleDelete = async (capsuleId: string) => {
+    try {
+      await axios.delete(`/api/timecapsules/delete/${capsuleId}`);
+      setCapsules(capsules.filter((capsule) => capsule.id !== capsuleId)); // Remove from state after deletion
+    } catch (err) {
+      console.error("Error deleting capsule:", err);
+      setError("Failed to delete time capsule.");
+    }
+  };
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
-*/
+
   return (
     <div className="min-h-screen bg-gradient-to-tl from-blue-400 to-purple-700">
       {/* Navigation Bar */}
@@ -118,7 +80,7 @@ function DashboardPage() {
             Welcome to the Dashboard
           </h1>
           <p className="text-gray-200 mb-4">
-            Here you can create, view and manage your time capsules securely.
+            Here you can create, view, and manage your time capsules securely.
           </p>
         </div>
 
@@ -151,6 +113,14 @@ function DashboardPage() {
                 <p className="text-gray-600 mb-2">
                   Release Date: {capsule.releaseDate}
                 </p>
+
+                {/* Delete Button */}
+                <button
+                  onClick={() => handleDelete(capsule.id)}
+                  className="mt-4 p-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
+                >
+                  Delete
+                </button>
               </div>
             </div>
           ))}

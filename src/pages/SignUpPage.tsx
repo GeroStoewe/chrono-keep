@@ -1,5 +1,6 @@
 import { useState, FormEvent, Dispatch, SetStateAction } from "react";
 import { useAuth } from "../hooks/UseAuth";
+import { getAuth } from "firebase/auth";
 import GradientHeading from "../components/GradientHeading";
 import { TextInputField } from "../components/security/TextInputField";
 import { PasswordInput } from "../components/security/PasswordInputField";
@@ -35,6 +36,27 @@ async function handleSignUp(
   setIsLoading(true);
   try {
     await signup(email, password, firstName, lastName);
+
+    const auth = getAuth();
+    const user = auth.currentUser;
+
+    if (user) {
+      const token = await user.getIdToken();
+
+      const response = await fetch("http://localhost:5000/api/auth", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error("Backend error: " + response.statusText);
+      }
+
+      const data = await response.json();
+      console.log("Backend Response:", data);
+    }
   } catch (err) {
     console.error("SignUp failed", err);
   } finally {

@@ -1,18 +1,17 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ref, push } from "firebase/database";
-import { realtimeDb } from "../firebase.ts";
-import {
-  getStorage,
-  ref as storageRef,
-  uploadBytes,
-  getDownloadURL
-} from "firebase/storage";
 import GradientHeading from "../components/GradientHeading";
 import { TextInputField } from "../components/security/TextInputField";
 import { SubmitButton } from "../components/SubmitButton";
 import { enqueueSnackbar } from "notistack"; // Import useSnackbar
 import { getAuth } from "firebase/auth";
+import {
+  getStorage,
+  ref as storageRef,
+  uploadBytes,
+  getDownloadURL
+} from "firebase/storage"; // Firebase Storage
+import axios from "axios";
 
 /**
  * CreateCapsulePage Component
@@ -59,42 +58,44 @@ function CreateCapsulePage() {
         imageUrl = await getDownloadURL(fileRef); // Get the download URL
       }
 
-      // Determine the database path based on the status
-      const databasePath =
-        status === "unlocked" ? "archivedCapsules" : "timeCapsules";
-
-      // Save the time capsule data to Firebase Realtime Database
-      const newCapsuleRef = ref(realtimeDb, databasePath);
-      await push(newCapsuleRef, {
+      // Prepare data to send
+      const capsuleData = {
         title,
         message,
-        releaseDate,
         status,
-        imageUrl,
-        user_id: userId // Add the user_id field
-      });
+        releaseDate,
+        imageUrl, // If an image is uploaded
+        userId: userId // Current user ID
+      };
 
-      // Show success snackbar notification
-      //TODO add x to manually dismiss the snackbar like you did in edit capsule page
-      enqueueSnackbar("The capsule is saved successfully!", {
-        variant: "success",
-        autoHideDuration: 2000 // Auto-hide after 3 seconds
-      });
+      // Form validation
+      if (!title || !message || !releaseDate) {
+        enqueueSnackbar("All fields are required", { variant: "error" });
+        setIsLoading(false);
+        return;
+      }
 
-      // Redirect to the dashboard if status is locked after successful submission
-      setTimeout(() => {
-        if (status === "locked") {
-          navigate("/dashboard");
-        } else {
-          navigate("/archive"); // Redirect to archive if status is "unlocked"
-        }
-      }, 2000); // Wait for 2 seconds before navigating
+      // Send POST request to backend
+      const response = await axios.post(
+        "http://localhost:5000/api/createcapsule/create",
+        capsuleData
+      );
+
+      // Handle the response
+      if (response.status === 200 && response.data && response.data.id) {
+        enqueueSnackbar("Time Capsule created successfully!", {
+          variant: "success"
+        });
+        navigate("/dashboard"); // Navigate to the dashboard after successful creation
+      } else {
+        enqueueSnackbar("Failed to create time capsule. Please try again.", {
+          variant: "error"
+        });
+      }
     } catch (error) {
-      console.error("Error saving time capsule:", error);
-      // Show error snackbar notification
-      enqueueSnackbar("Failed to save the capsule. Please try again.", {
-        variant: "error",
-        autoHideDuration: 2000
+      console.error("Error creating time capsule:", error);
+      enqueueSnackbar("Failed to create time capsule. Please try again.", {
+        variant: "error"
       });
     } finally {
       setIsLoading(false);
@@ -104,7 +105,7 @@ function CreateCapsulePage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-tl from-blue-400 to-purple-700">
       <div className="flex flex-col lg:flex-row bg-white rounded-xl shadow-2xl max-w-4xl w-full">
-        {/* Left section - Create Time Capsul Image */}
+        {/* Left section - Create Time Capsule Image */}
         <div className="lg:w-1/2 w-full">
           <img
             src="/create-capsule.jpeg"
