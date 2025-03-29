@@ -80,7 +80,7 @@ function ArchivePage() {
                 <img
                   src={capsule.imageUrl || "/dashboard-placeholder.jpeg"}
                   alt={capsule.title}
-                  className="w-full h-48 object-cover"
+                  className="w-full h-70 object-center"
                 />
 
                 {/* Capsule Details */}
