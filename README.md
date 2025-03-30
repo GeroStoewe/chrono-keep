@@ -6,19 +6,44 @@ With ChronoKeep you can save text, images or videos with a date.
 After some time the content will be visible again.
 User can write a message or taking a picture for the future self and getting them via e-mail after a certain time back.
 
-## 9 Pages
+# Features
 
-- a
-- a
-- a
-- a
-- a
-- a
-- a
-- a
-- a
+ChronoKeep allows users to create digital time capsules that can contain text, images, or videos. These capsules are encrypted and scheduled for release at a future date, providing a unique way to preserve memories and messages.
+• Time Capsules: Store messages securely, with the ability to add text, and images.
 
-# React + TypeScript + Vite
+• Edit the Capsule: Change the details of the saved Capsule.
+• Scheduled Release: Set a specific release date to reveal the capsule content.
+• Privacy & Security: Your data is encrypted to ensure privacy.
+
+# Total Pages
+
+- Landing Page
+- Sign up
+- Sign in
+- Dashboard
+- Add Time Capsule
+- Edit Time Capsule
+- Archive
+- About Us
+- Profile
+
+# Installation Guidelines
+
+1.
+2.
+3.
+4.
+
+# Tech Stack
+
+• React: Frontend framework for building interactive UIs.
+
+• Programming language: Typescript
+• Tailwind CSS: Utility-first CSS framework for styling.
+• Firebase: For secure data storage and user authentication.
+• Video Background: Parallax video effect created using custom React components.
+
+## React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 

@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ref, push } from "firebase/database";
-import { realtimeDb } from "../firebase.ts";
 import {
   getStorage,
   ref as storageRef,
@@ -11,7 +9,7 @@ import {
 import GradientHeading from "../components/GradientHeading";
 import { TextInputField } from "../components/security/TextInputField";
 import { SubmitButton } from "../components/SubmitButton";
-import { enqueueSnackbar } from "notistack"; // Import useSnackbar
+import { enqueueSnackbar, closeSnackbar } from "notistack"; // Import useSnackbar
 import { getAuth } from "firebase/auth";
 
 /**
@@ -59,36 +57,47 @@ function CreateCapsulePage() {
         imageUrl = await getDownloadURL(fileRef); // Get the download URL
       }
 
-      // Determine the database path based on the status
-      const databasePath =
-        status === "unlocked" ? "archivedCapsules" : "timeCapsules";
+      const response = await fetch(
+        "https://createcapsule-6udqjh4w5q-uc.a.run.app",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            title,
+            message,
+            releaseDate,
+            status,
+            imageUrl,
+            user_id: userId
+          })
+        }
+      );
 
-      // Save the time capsule data to Firebase Realtime Database
-      const newCapsuleRef = ref(realtimeDb, databasePath);
-      await push(newCapsuleRef, {
-        title,
-        message,
-        releaseDate,
-        status,
-        imageUrl,
-        user_id: userId // Add the user_id field
-      });
+      if (!response.ok) {
+        throw new Error("Failed to save the capsule");
+      }
 
-      // Show success snackbar notification
-      //TODO add x to manually dismiss the snackbar like you did in edit capsule page
+      const data = await response.json();
+      console.log("Capsule saved:", data);
+
       enqueueSnackbar("The capsule is saved successfully!", {
         variant: "success",
-        autoHideDuration: 2000 // Auto-hide after 3 seconds
+        autoHideDuration: 2000, // Auto-hide after 3 seconds
+        action: (key) => (
+          <button
+            onClick={() => closeSnackbar(key)}
+            className="text-white px-2"
+          >
+            ✖
+          </button>
+        )
       });
 
-      // Redirect to the dashboard if status is locked after successful submission
       setTimeout(() => {
-        if (status === "locked") {
-          navigate("/dashboard");
-        } else {
-          navigate("/archive"); // Redirect to archive if status is "unlocked"
-        }
-      }, 2000); // Wait for 2 seconds before navigating
+        navigate(status === "locked" ? "/dashboard" : "/archive");
+      }, 2000);
     } catch (error) {
       console.error("Error saving time capsule:", error);
       // Show error snackbar notification
@@ -99,6 +108,11 @@ function CreateCapsulePage() {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setStatus(e.target.value);
+    console.log("Selected Status:", e.target.value); // Debugging
   };
 
   return (
@@ -127,7 +141,6 @@ function CreateCapsulePage() {
                 type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                required
               />
             </div>
 
@@ -137,7 +150,6 @@ function CreateCapsulePage() {
               type="text"
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              required
             />
 
             {/* Release Date Input */}
@@ -146,7 +158,6 @@ function CreateCapsulePage() {
               type="date"
               value={releaseDate}
               onChange={(e) => setReleaseDate(e.target.value)}
-              required
             />
 
             {/* Status Input */}
@@ -156,19 +167,11 @@ function CreateCapsulePage() {
               </label>
               <div className="relative">
                 <select
+                  id="status"
+                  name="status"
                   value={status}
-                  onChange={(e) => {
-                    const newStatus = e.target.value;
-                    setStatus(newStatus);
-
-                    // If the status is set to "unlocked" and there's no release date, set it to today
-                    if (newStatus === "unlocked" && !releaseDate) {
-                      const today = new Date().toISOString().split("T")[0]; // Format YYYY-MM-DD
-                      setReleaseDate(today);
-                    }
-                  }}
-                  className="w-full px-4 py-3 pr-100 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-transparent transition duration-300 transform hover:scale-105 focus:gradient-border appearance-none"
-                  required
+                  onChange={handleStatusChange}
+                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-transparent transition duration-300 transform hover:scale-105 focus:gradient-border appearance-none"
                 >
                   <option value="locked">Locked</option>
                   <option value="unlocked">Unlocked</option>

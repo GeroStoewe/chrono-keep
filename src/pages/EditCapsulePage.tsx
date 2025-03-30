@@ -14,8 +14,8 @@ import { SubmitButton } from "../components/SubmitButton";
 import NavigationBar from "../components/dashboardPage/NavigationBar";
 import GradientHeading from "../components/GradientHeading.tsx";
 import BackArrowButton from "../components/editCapsulePage/BackArrowButton.tsx";
+import { enqueueSnackbar, closeSnackbar } from "notistack";
 
-//TODO use snackbar
 /**
  * EditCapsulePage Component
  *
@@ -77,7 +77,7 @@ function EditCapsulePage() {
       const dbRef = ref(realtimeDb, `timeCapsules/${id}`);
       if (status === "unlocked") {
         // Move to archive
-        const archiveRef = ref(realtimeDb, `archivedCapsules/${id}`);
+        const archiveRef = ref(realtimeDb, `archivedCapsules/${userId}/${id}`);
         await update(archiveRef, {
           title,
           message,
@@ -99,19 +99,37 @@ function EditCapsulePage() {
           user_id: userId
         });
       }
-
+      
       // Show success snackbar
-      setSnackbar({ open: true, message: "Capsule updated successfully!" });
+        enqueueSnackbar("Capsule updated successfully!", {
+          variant: "success",
+          autoHideDuration: 2000, // Auto-hide after 2 seconds
+          action: (key) => (
+            <button onClick={() => closeSnackbar(key)} className="text-white px-2">
+              ✖
+            </button>
+          ),
+        });
+
       setTimeout(() => {
         navigate(status === "unlocked" ? "/archive" : "/dashboard"); // Navigate back to archive if status is unlocked, otherwise navigate back to dashboard after 2 seconds
       }, 2000);
     } catch (error) {
       console.error("Error updating time capsule:", error);
-      setSnackbar({ open: true, message: "Failed to update capsule." });
+
+      // Show error snackbar with manual close button
+      enqueueSnackbar("Failed to update capsule.", {
+        variant: "error",
+        action: (key) => (
+          <button onClick={() => closeSnackbar(key)} className="text-white px-2">
+            ✖
+          </button>
+        ),
+      });
     } finally {
       setIsLoading(false);
     }
-  };
+  }
 
   // Handle delete functionality
   const handleDelete = async () => {
@@ -134,11 +152,6 @@ function EditCapsulePage() {
         setIsLoading(false);
       }
     }
-  };
-
-  // Close snackbar
-  const closeSnackbar = () => {
-    setSnackbar({ ...snackbar, open: false });
   };
 
   // Handle status change
@@ -230,7 +243,7 @@ function EditCapsulePage() {
               />
               <label
                 htmlFor="file-upload"
-                className="cursor-pointer bg-blue-500 text-white px-4 py-2 rounded-lg"
+                className="cursor-pointer bg-blue-500 text-white px-4 py-2 rounded-lg mt-2 inline-block"
               >
                 Choose File
               </label>
@@ -244,7 +257,7 @@ function EditCapsulePage() {
             </div>
 
             {/* Submit Button */}
-            <div className="mt-6">
+            <div className="mt-4">
               <SubmitButton text="Update Capsule" isLoading={isLoading} />
             </div>
 
@@ -266,7 +279,7 @@ function EditCapsulePage() {
       {snackbar.open && (
         <div className="fixed bottom-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg">
           {snackbar.message}
-          <button onClick={closeSnackbar} className="ml-4">
+          <button onClick={() => closeSnackbar} className="ml-4">
             ✕
           </button>
         </div>
