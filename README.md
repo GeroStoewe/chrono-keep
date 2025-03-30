@@ -37,10 +37,13 @@ ChronoKeep allows users to create digital time capsules that can contain text, a
 
 # Installation Guidelines
 
-1.
-2.
-3.
-4.
+1. Install **Visual Studio Code** from Microsoft or **WebStorm** from JetBrains
+2. Install the latest version of Node.js: **https://nodejs.org/en**
+3. Clone the repo using: **git clone https://github.com/GeroStoewe/chrono-keep.git**
+4. Open the new folder
+5. Add the **Firebase API Key** inside the **".env" file** (you can find the API key in the attachments of the "Wissenschaftlicher Text").
+6. Run this command to install the node_modules: **npm install**
+7. Start the application by running: **npm run dev**
 
 # Tech Stack
 
