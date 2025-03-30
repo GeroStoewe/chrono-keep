@@ -37,10 +37,8 @@ function App() {
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/create-capsule" element={<CreateCapsulePage />} />
             <Route path="/archive" element={<ArchivePage />} />{" "}
-            {/* New route */}
-            <Route path="/about" element={<AboutPage />} /> {/* New route */}
+            <Route path="/about" element={<AboutPage />} />
             <Route path="/profile" element={<ProfilePage />} />{" "}
-            {/* New route */}
             <Route path="/edit-capsule/:id" element={<EditCapsulePage />} />
           </Routes>
         </AuthProvider>

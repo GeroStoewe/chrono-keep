@@ -1,6 +1,13 @@
 import { Link } from "react-router-dom";
 import GradientHeading from "../GradientHeading";
 
+/**
+ * NavBar component renders the main navigation bar for ChronoKeep.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered NavBar component.
+ */
+
 function NavBar() {
   return (
     <nav className="bg-white shadow-lg">

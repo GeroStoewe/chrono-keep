@@ -11,15 +11,24 @@ import NavigationBar from "../components/dashboardPage/NavigationBar";
 /**
  * Dashboard Component
  *
- * This component provides a user-friendly dashboard with:
- * - Navigation bar.
- * - Create Button for adding a new time capsule.
- * - Display only the logged-in user's locked capsules with an edit button.
+ * The `DashboardPage` component serves as the main interface for users to manage their time capsules.
+ * It provides a visually appealing and user-friendly experience with the following features:
  *
- * @returns {JSX.Element} The dashboard UI.
+ * - **Navigation Bar**: Ensures access to other sections of the application.
+ * - **Create Button**: Allows users to add a new time capsule.
+ * - **Unlock Button**: Checks for due time capsules and moves them to the archive when they reach their release date.
+ * - **Time Capsule Display**:
+ *   - Shows only the logged-in user's locked time capsules.
+ *   - Each capsule is displayed with its title, message, status, and release date.
+ *   - Users can edit their time capsules via edit button.
+ * - **Automatic Unlocking Mechanism**:
+ *   - Periodically checks if any locked time capsules have reached their release date.
+ *   - Moves unlocked capsules to an archived section and removes them from dashboard to the archives capsules.
+ *
+ * @returns {JSX.Element} The functional and interactive dashboard UI.
  */
 
-// Define the type for a time capsule
+// The type for a time capsule
 interface TimeCapsule {
   id: string; // Unique ID for each capsule
   title: string;
@@ -44,10 +53,13 @@ function DashboardPage() {
         if (data) {
           // Filter capsules by user_id
           const capsulesArray = Object.keys(data)
-            .filter((key) => data[key].user_id === userId && data[key].status === "locked")
+            .filter(
+              (key) =>
+                data[key].user_id === userId && data[key].status === "locked"
+            )
             .map((key) => ({
               id: key,
-              ...data[key] 
+              ...data[key]
             }));
           setCapsules(capsulesArray);
         }
@@ -59,43 +71,66 @@ function DashboardPage() {
     const now = new Date();
     console.log("Current Date in unlock function:", now); // Debugging log
     for (const capsule of capsules) {
-      console.log("Checking capsule:", capsule.title, "ID:", capsule.id, "Release Date:", capsule.releaseDate, "Status:", capsule.status); // Debugging log
+      console.log(
+        "Checking capsule:",
+        capsule.title,
+        "ID:",
+        capsule.id,
+        "Release Date:",
+        capsule.releaseDate,
+        "Status:",
+        capsule.status
+      ); // Debugging log
       if (capsule.status === "locked") {
         const releaseDate = new Date(capsule.releaseDate);
         console.log("Parsed Release Date:", releaseDate); // Debugging log
         console.log("Comparison:", releaseDate.getTime() <= now.getTime()); // Debugging log
         if (releaseDate <= now) {
           const capsuleRef = ref(realtimeDb, `timeCapsules/${capsule.id}`);
-          const archivedCapsuleRef = ref(realtimeDb, `archivedCapsules/${userId}/${capsule.id}`);
+          const archivedCapsuleRef = ref(
+            realtimeDb,
+            `archivedCapsules/${userId}/${capsule.id}`
+          );
 
           try {
             const snapshot = await get(capsuleRef);
             const capsuleData = snapshot.val();
 
             if (capsuleData) {
-              await set(archivedCapsuleRef, { ...capsuleData, status: "unlocked" });
+              await set(archivedCapsuleRef, {
+                ...capsuleData,
+                status: "unlocked"
+              });
               await remove(capsuleRef);
-              console.log(`Time capsule "${capsule.title}" (ID: ${capsule.id}) unlocked and moved to archive.`); // Debugging log
+              console.log(
+                `Time capsule "${capsule.title}" (ID: ${capsule.id}) unlocked and moved to archive.`
+              ); // Debugging log
               setCapsules((prevCapsules) =>
                 prevCapsules.filter((c) => c.id !== capsule.id)
               );
             } else {
-              console.warn(`Could not retrieve data for capsule with ID: ${capsule.id}`); // Debugging log
+              console.warn(
+                `Could not retrieve data for capsule with ID: ${capsule.id}`
+              ); // Debugging log
             }
           } catch (error) {
             console.error("Error unlocking and archiving time capsule:", error); // Debugging log
           }
         } else {
-          console.log(`Capsule "${capsule.title}" (ID: ${capsule.id}) release date is in the future.`); // Debugging log
+          console.log(
+            `Capsule "${capsule.title}" (ID: ${capsule.id}) release date is in the future.`
+          ); // Debugging log
         }
       } else {
-        console.log(`Capsule "${capsule.title}" (ID: ${capsule.id}) is not locked.`); // Debugging log
+        console.log(
+          `Capsule "${capsule.title}" (ID: ${capsule.id}) is not locked.`
+        ); // Debugging log
       }
     }
   }, [capsules, userId]);
 
   useEffect(() => {
-    const intervalId = setInterval(checkAndUnlockCapsules, 60 * 60 * 1000); // Check every hour (adjust as needed)
+    const intervalId = setInterval(checkAndUnlockCapsules, 60 * 60 * 1000); // Checks every hour
     return () => clearInterval(intervalId);
   }, [checkAndUnlockCapsules]);
 
@@ -125,7 +160,7 @@ function DashboardPage() {
             >
               {/* Image Placeholder */}
               <img
-                src={capsule.imageUrl || "/dashboard-placeholder.jpeg"} // Use placeholder image if no image
+                src={capsule.imageUrl || "/dashboard-placeholder.jpeg"} // Use placeholder image if no image is selected
                 alt={capsule.title}
                 className="w-full h-70 object-center"
               />
@@ -149,19 +184,20 @@ function DashboardPage() {
             </div>
           ))}
         </div>
-      <div className="fixed bottom-30 right-8 flex flex-col gap-4">
-      <UnlockButton
+        <div className="fixed bottom-30 right-8 flex flex-col gap-4">
+          <UnlockButton
             onClick={checkAndUnlockCapsules}
-            isLoading={false} 
-            text={"Unlock"} 
-            to={""} />
+            isLoading={false}
+            text={"Unlock"}
+            to={""}
+          />
         </div>
       </div>
-      {/* Create Time Capsule Button (Fixed at Bottom-Right Corner) */}
+      {/* Create Time Capsule Button */}
       <div className="fixed bottom-8 right-8">
         <CreateButton to="/create-capsule" text="Create Time Capsule" />
       </div>
-      </div>
+    </div>
   );
 }
 

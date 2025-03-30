@@ -1,5 +1,16 @@
 import { useNavigate } from "react-router-dom";
 
+/**
+ * BackArrowButton component renders a circular button with a back arrow icon.
+ * Clicking the button navigates to the previous page or triggers a custom function if provided.
+ *
+ * @component
+ * @param {Object} props - The properties passed to the component.
+ * @param {Function} [props.onClick] - Optional custom function to execute on button click.
+ * If not provided, it navigates back to the previous page.
+ * @returns {JSX.Element} The rendered BackArrowButton component.
+ */
+
 interface BackArrowButtonProps {
   onClick?: () => void;
 }

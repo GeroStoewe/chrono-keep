@@ -1,6 +1,18 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
+/**
+ * CreateButton component renders a floating action button that expands
+ * when clicked and navigates to a specified route after a short delay.
+ *
+ * @component
+ * @param {Object} props - The properties passed to the component.
+ * @param {string} props.text - The text displayed when the button expands.
+ * @param {string} props.to - The destination route when the button is clicked.
+ * @param {boolean} [props.isLoading=false] - Whether the button shows a loading spinner.
+ * @returns {JSX.Element} The rendered CreateButton component.
+ */
+
 export function CreateButton({
   text,
   to,

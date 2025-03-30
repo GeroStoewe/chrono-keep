@@ -44,9 +44,9 @@ function ArchivePage() {
         if (data) {
           // Convert the returned object to an array of capsules
           const capsulesArray = Object.keys(data).map((key) => ({
-              id: key,
-              ...data[key]
-            }));
+            id: key,
+            ...data[key]
+          }));
           setCapsules(capsulesArray);
         } else {
           setCapsules([]);

@@ -1,31 +1,39 @@
 # ChronoKeep
 
-This repository represents a React project by Aylin Oymak and Gero Stöwe (4th semester) for the "Webprogrammierung" course by Florian Bendschuß.
+This repository represents a React project by Aylin Oymak and Gero Stöwe (4th semester) for the "Web Programming" course by Florian Bendschuß.
 
-With ChronoKeep you can save text, images or videos with a date.
-After some time the content will be visible again.
-User can write a message or taking a picture for the future self and getting them via e-mail after a certain time back.
+## Table of Contents
+
+1. [Features](#features)
+2. [Pages](#pages)
+3. [Installation Guidelines](#installation-guidelines)
+4. [Tech Stack](#tech-stack)
 
 # Features
 
-ChronoKeep allows users to create digital time capsules that can contain text, images, or videos. These capsules are encrypted and scheduled for release at a future date, providing a unique way to preserve memories and messages.
+ChronoKeep allows users to create digital time capsules that can contain text, and images. These capsules are encrypted and scheduled for release at a future date, providing a unique way to preserve memories and messages.
+
 • Time Capsules: Store messages securely, with the ability to add text, and images.
 
 • Edit the Capsule: Change the details of the saved Capsule.
+
+• Unlock the Capsule: Release the time capsule if its due date is reached.
+
 • Scheduled Release: Set a specific release date to reveal the capsule content.
+
 • Privacy & Security: Your data is encrypted to ensure privacy.
 
-# Total Pages
+# Pages
 
-- Landing Page
-- Sign up
-- Sign in
-- Dashboard
-- Add Time Capsule
-- Edit Time Capsule
-- Archive
-- About Us
-- Profile
+- Landing Page: The entry point of the app, introducing users to the concept of time capsules with a call-to-action to sign up or log in.
+- Sign up: Allows new users to create an account to start storing and managing their time capsules.
+- Sign in: Provides existing users access to their time capsules by logging into their account.
+- Dashboard: Displays an overview of the user’s locked time capsules, with options to create, edit, or unlock them.
+- Add Time Capsule: A form page where users can create a new time capsule by adding a title, message, image, and a release date.
+- Edit Time Capsule: Allows users to modify the details of an existing locked time capsule before its release date.
+- Archive: Stores all unlocked time capsules, providing users access to their past messages and memories.
+- About Us: A page including the vision of the app, contact details of its creators, and the version of the web application.
+- Profile: Displays user account details with options to update personal information and include logout option.
 
 # Installation Guidelines
 
@@ -39,8 +47,11 @@ ChronoKeep allows users to create digital time capsules that can contain text, i
 • React: Frontend framework for building interactive UIs.
 
 • Programming language: Typescript
+
 • Tailwind CSS: Utility-first CSS framework for styling.
+
 • Firebase: For secure data storage and user authentication.
+
 • Video Background: Parallax video effect created using custom React components.
 
 ## React + TypeScript + Vite

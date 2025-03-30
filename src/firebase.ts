@@ -14,7 +14,7 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
   measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
   databaseURL:
-    "https://chrono-keep-default-rtdb.europe-west1.firebasedatabase.app/" // Added our Realtime Database URL
+    "https://chrono-keep-default-rtdb.europe-west1.firebasedatabase.app/"
 };
 
 const app = initializeApp(firebaseConfig);

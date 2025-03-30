@@ -118,7 +118,7 @@ function CreateCapsulePage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-tl from-blue-400 to-purple-700">
       <div className="flex flex-col lg:flex-row bg-white rounded-xl shadow-2xl max-w-4xl w-full">
-        {/* Left section - Create Time Capsul Image */}
+        {/* Left section - Create Time Capsule Image */}
         <div className="lg:w-1/2 w-full">
           <img
             src="/create-capsule.jpeg"
