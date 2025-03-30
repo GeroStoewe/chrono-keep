@@ -1,6 +1,19 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
+/**
+ * UnlockButton component renders a button that expands on click, triggers an action,
+ * and navigates to a specified route after a delay.
+ *
+ * @component
+ * @param {Object} props - The properties passed to the component.
+ * @param {string} props.text - The text displayed when the button expands.
+ * @param {Function} props.onClick - The function to execute when the button is clicked.
+ * @param {boolean} [props.isLoading=false] - Whether the button shows a loading spinner.
+ * @param {string} props.to - The destination route when the button is clicked.
+ * @returns {JSX.Element} The rendered UnlockButton component.
+ */
+
 export function UnlockButton({
   text,
   onClick,

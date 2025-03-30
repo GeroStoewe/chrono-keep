@@ -19,9 +19,18 @@ import { enqueueSnackbar, closeSnackbar } from "notistack";
 /**
  * EditCapsulePage Component
  *
- * This component provides a form for editing existing time capsules.
+ * This component provides a form for editing an existing time capsule.
+ * Users can modify the title, message, release date, status, and image associated with the capsule.
+ * If the capsule is unlocked, it will be moved to the archive. Users can also delete a capsule.
  *
- * @returns {JSX.Element} The form UI.
+ * Features:
+ * - Fetches and displays existing capsule data from Firebase Realtime Database.
+ * - Allows users to update text fields and optionally upload a new image.
+ * - Updates the capsule in Firebase or archives it if unlocked.
+ * - Displays success and error notifications using `notistack`.
+ * - Provides a delete option to remove the capsule permanently.
+ *
+ * @returns {JSX.Element} The EditCapsulePage component containing the edit form.
  */
 
 function EditCapsulePage() {
@@ -100,7 +109,7 @@ function EditCapsulePage() {
         });
       }
       
-      // Show success snackbar
+      // Success snackbar
         enqueueSnackbar("Capsule updated successfully!", {
           variant: "success",
           autoHideDuration: 2000, // Auto-hide after 2 seconds
@@ -140,7 +149,7 @@ function EditCapsulePage() {
         const dbRef = ref(realtimeDb, `timeCapsules/${id}`);
         await remove(dbRef); // Delete the capsule from Firebase
 
-        // Show success snackbar
+        // Success snackbar
         setSnackbar({ open: true, message: "Capsule deleted successfully!" });
         setTimeout(() => {
           navigate("/dashboard"); // Navigate back to dashboard after 2 seconds
@@ -177,7 +186,6 @@ function EditCapsulePage() {
           <div className="mb-4">
             <BackArrowButton />
           </div>
-
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Title Input */}
@@ -186,7 +194,6 @@ function EditCapsulePage() {
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              required
             />
 
             {/* Message Input */}
@@ -195,7 +202,6 @@ function EditCapsulePage() {
               type="text"
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              required
             />
 
             {/* Release Date Input */}
@@ -204,7 +210,6 @@ function EditCapsulePage() {
               type="date"
               value={releaseDate}
               onChange={(e) => setReleaseDate(e.target.value)}
-              required
             />
 
             {/* Status Input */}

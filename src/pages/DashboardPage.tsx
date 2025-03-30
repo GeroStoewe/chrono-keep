@@ -11,15 +11,24 @@ import NavigationBar from "../components/dashboardPage/NavigationBar";
 /**
  * Dashboard Component
  *
- * This component provides a user-friendly dashboard with:
- * - Navigation bar.
- * - Create Button for adding a new time capsule.
- * - Display only the logged-in user's locked capsules with an edit button.
+ * The `DashboardPage` component serves as the main interface for users to manage their time capsules.
+ * It provides a visually appealing and user-friendly experience with the following features:
  *
- * @returns {JSX.Element} The dashboard UI.
+ * - **Navigation Bar**: Ensures access to other sections of the application.
+ * - **Create Button**: Allows users to add a new time capsule.
+ * - **Unlock Button**: Checks for due time capsules and moves them to the archive when they reach their release date.
+ * - **Time Capsule Display**:
+ *   - Shows only the logged-in user's locked time capsules.
+ *   - Each capsule is displayed with its title, message, status, and release date.
+ *   - Users can edit their time capsules via edit button.
+ * - **Automatic Unlocking Mechanism**:
+ *   - Periodically checks if any locked time capsules have reached their release date.
+ *   - Moves unlocked capsules to an archived section and removes them from dashboard to the archives capsules.
+ *
+ * @returns {JSX.Element} The functional and interactive dashboard UI.
  */
 
-// Define the type for a time capsule
+// The type for a time capsule
 interface TimeCapsule {
   id: string; // Unique ID for each capsule
   title: string;
@@ -95,7 +104,7 @@ function DashboardPage() {
   }, [capsules, userId]);
 
   useEffect(() => {
-    const intervalId = setInterval(checkAndUnlockCapsules, 60 * 60 * 1000); // Check every hour (adjust as needed)
+    const intervalId = setInterval(checkAndUnlockCapsules, 60 * 60 * 1000); // Checks every hour
     return () => clearInterval(intervalId);
   }, [checkAndUnlockCapsules]);
 
@@ -125,7 +134,7 @@ function DashboardPage() {
             >
               {/* Image Placeholder */}
               <img
-                src={capsule.imageUrl || "/dashboard-placeholder.jpeg"} // Use placeholder image if no image
+                src={capsule.imageUrl || "/dashboard-placeholder.jpeg"} // Use placeholder image if no image is selected
                 alt={capsule.title}
                 className="w-full h-70 object-center"
               />
@@ -157,7 +166,7 @@ function DashboardPage() {
             to={""} />
         </div>
       </div>
-      {/* Create Time Capsule Button (Fixed at Bottom-Right Corner) */}
+      {/* Create Time Capsule Button */}
       <div className="fixed bottom-8 right-8">
         <CreateButton to="/create-capsule" text="Create Time Capsule" />
       </div>
