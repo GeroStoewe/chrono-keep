@@ -18,33 +18,32 @@ export function UnlockButton({
   text,
   onClick,
   isLoading = false,
-  to,
+  to
 }: {
   text: string;
   onClick: () => void;
   isLoading?: boolean;
   to: string;
 }) {
- 
   // Handle button click
   const [isExpanded, setIsExpanded] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const navigate = useNavigate();
 
-    // Collapse the button when clicking outside
-    useEffect(() => {
-      const handleClickOutside = (event: MouseEvent) => {
-        if (
-          buttonRef.current &&
-          !buttonRef.current.contains(event.target as Node)
-        ) {
-          setIsExpanded(false);
-        }
-      };
-  
-      document.addEventListener("mousedown", handleClickOutside);
-      return () => document.removeEventListener("mousedown", handleClickOutside);
-    }, []);
+  // Collapse the button when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        buttonRef.current &&
+        !buttonRef.current.contains(event.target as Node)
+      ) {
+        setIsExpanded(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   // Handle button click with navigation delay
   const handleClick = () => {

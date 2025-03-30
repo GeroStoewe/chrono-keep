@@ -3,6 +3,7 @@
 This repository represents a React project by Aylin Oymak and Gero Stöwe (4th semester) for the "Web Programming" course by Florian Bendschuß.
 
 ## Table of Contents
+
 1. [Features](#features)
 2. [Pages](#pages)
 3. [Installation Guidelines](#installation-guidelines)

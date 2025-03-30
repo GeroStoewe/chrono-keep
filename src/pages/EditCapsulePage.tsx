@@ -108,17 +108,20 @@ function EditCapsulePage() {
           user_id: userId
         });
       }
-      
+
       // Success snackbar
-        enqueueSnackbar("Capsule updated successfully!", {
-          variant: "success",
-          autoHideDuration: 2000, // Auto-hide after 2 seconds
-          action: (key) => (
-            <button onClick={() => closeSnackbar(key)} className="text-white px-2">
-              ✖
-            </button>
-          ),
-        });
+      enqueueSnackbar("Capsule updated successfully!", {
+        variant: "success",
+        autoHideDuration: 2000, // Auto-hide after 2 seconds
+        action: (key) => (
+          <button
+            onClick={() => closeSnackbar(key)}
+            className="text-white px-2"
+          >
+            ✖
+          </button>
+        )
+      });
 
       setTimeout(() => {
         navigate(status === "unlocked" ? "/archive" : "/dashboard"); // Navigate back to archive if status is unlocked, otherwise navigate back to dashboard after 2 seconds
@@ -130,15 +133,18 @@ function EditCapsulePage() {
       enqueueSnackbar("Failed to update capsule.", {
         variant: "error",
         action: (key) => (
-          <button onClick={() => closeSnackbar(key)} className="text-white px-2">
+          <button
+            onClick={() => closeSnackbar(key)}
+            className="text-white px-2"
+          >
             ✖
           </button>
-        ),
+        )
       });
     } finally {
       setIsLoading(false);
     }
-  }
+  };
 
   // Handle delete functionality
   const handleDelete = async () => {
